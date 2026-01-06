@@ -1,9 +1,9 @@
 @use "../../assets/scss/index.scss" as *;
 
-.checkbox {
-  display: inline-flex;
+.checkbox { 
+  display: inline-flex; 
   align-items: center;
-  gap: px(8);
+  gap: px(8); 
   cursor: pointer;
   user-select: none;
   min-height: px(20);

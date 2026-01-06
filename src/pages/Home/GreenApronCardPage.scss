@@ -26,12 +26,12 @@
     }
   }
 
-  &__card-section {
+  &__card-section { 
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: center; 
     gap: px(8);
     text-align: center;
     padding: px(16);

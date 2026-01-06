@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "types": [],
+    "types": ["vite/client"],
     "lib": [
       "dom",
       "dom.iterable",
