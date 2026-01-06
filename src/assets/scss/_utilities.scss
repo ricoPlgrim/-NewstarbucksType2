@@ -1,0 +1,36 @@
+@use "./mixins" as *;
+
+// Spacing Utilities
+// Margin utilities
+@for $i from 10 through 100 {
+  .mt-#{$i} { @include px(margin-top, $i); }
+  .mb-#{$i} { @include px(margin-bottom, $i); }
+  .ml-#{$i} { @include px(margin-left, $i); }
+  .mr-#{$i} { @include px(margin-right, $i); }
+  .mx-#{$i} {
+    @include px(margin-left, $i);
+    @include px(margin-right, $i);
+  }
+  .my-#{$i} {
+    @include px(margin-top, $i);
+    @include px(margin-bottom, $i);
+  }
+  .m-#{$i} { @include px(margin, $i); }
+}
+
+// Padding utilities
+@for $i from 10 through 100 {
+  .pt-#{$i} { @include px(padding-top, $i); }
+  .pb-#{$i} { @include px(padding-bottom, $i); }
+  .pl-#{$i} { @include px(padding-left, $i); }
+  .pr-#{$i} { @include px(padding-right, $i); }
+  .px-#{$i} {
+    @include px(padding-left, $i);
+    @include px(padding-right, $i);
+  }
+  .py-#{$i} {
+    @include px(padding-top, $i);
+    @include px(padding-bottom, $i);
+  }
+  .p-#{$i} { @include px(padding, $i); }
+}

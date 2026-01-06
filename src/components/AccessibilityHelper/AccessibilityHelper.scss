@@ -1,0 +1,244 @@
+@use "../../assets/scss/index.scss" as *;
+
+.accessibility-helper {
+  position: fixed;
+  top: 50vh;
+  right: 0;
+  z-index: 1000;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 1rem; /* 큰글씨 모드 제외 */
+  will-change: transform;
+
+  &__toggle {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    min-width: px(60);
+    width: auto;
+    height: px(60);
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: px(4);
+    padding: px(12);
+    background: var(--color-accent);
+    color: var(--color-white);
+    border: none;
+    border-radius: px(8) 0 0 px(8);
+    cursor: pointer;
+    font-size: px(11);
+    font-weight: 600;
+    box-shadow: var(--shadow-overlay);
+    opacity: 1;
+    z-index: 2;
+
+    &:hover,
+    &:focus {
+      background: var(--color-accent);
+      filter: brightness(0.9);
+      outline: 2px solid var(--color-white);
+      outline-offset: -2px;
+    }
+
+    &:active {
+      background: var(--color-accent);
+      filter: brightness(0.85);
+    }
+  }
+
+  &__icon {
+    font-size: px(10);
+    writing-mode: initial;
+    text-orientation: initial;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__label {
+    font-size: px(11);
+    line-height: 1;
+    white-space: nowrap;
+    word-break: keep-all;
+    overflow-wrap: normal;
+    display: inline-block;
+    text-orientation: mixed;
+    min-width: px(22);
+    height: auto;
+    text-align: center;
+    letter-spacing: 0;
+    unicode-bidi: bidi-override;
+  }
+
+  &__panel {
+    position: relative;
+    width: px(320);
+    max-height: 80vh;
+    padding: px(20);
+    background: var(--color-card);
+    border-left: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    border-radius: px(8) 0 0 px(8);
+    box-shadow: var(--shadow-overlay-large);
+    opacity: 1;
+    transform: translateX(100%);
+    visibility: visible;
+    pointer-events: auto;
+    cursor: auto;
+  }
+
+  // 열릴 때
+  &.is-open {
+    .accessibility-helper__panel {
+      transform: translateX(0);
+      display: block;
+      visibility: visible;
+      pointer-events: auto;
+    }
+  }
+
+  // 닫힐 때 즉시 hidden 처리
+  &__panel.is-hidden {
+    transform: translateX(100%);
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  &__section {
+    margin-bottom: px(24);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__title {
+    @include px(font-size, 16);
+    @include px(margin-bottom, 12);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  &__control {
+    margin-bottom: px(16);
+  }
+
+  &__label-text {
+    display: block;
+    @include px(font-size, 14);
+    @include px(margin-bottom, 8);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  &__toggle-group {
+    display: flex;
+    gap: px(8);
+    flex-wrap: wrap;
+  }
+
+  &__button {
+    flex: 1;
+    min-width: px(60);
+    padding: px(10) px(16);
+    @include px(font-size, 14);
+    background: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: px(6);
+    cursor: pointer;
+    font-weight: 500;
+
+    &:hover {
+      background: var(--color-border);
+    }
+
+    &:focus {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    &.is-active {
+      background: var(--color-accent);
+      color: var(--color-white);
+      border-color: var(--color-accent);
+    }
+  }
+
+  &__status {
+    @include px(padding, 12);
+    @include px(font-size, 13);
+    background: var(--color-bg);
+    border-radius: px(6);
+    color: var(--color-muted);
+    text-align: center;
+  }
+
+  &__checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__checklist-item {
+    margin-bottom: px(8);
+  }
+
+  &__checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: px(8);
+    @include px(font-size, 14);
+    color: var(--color-text);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+
+  &__checkbox {
+    width: px(18);
+    height: px(18);
+    cursor: pointer;
+    accent-color: var(--color-accent);
+  }
+
+  &__guide {
+    @include px(font-size, 13);
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+
+  &__code {
+    @include px(padding, 12);
+    @include px(margin, 8, 0);
+    @include px(font-size, 12);
+    background: var(--color-bg);
+    border-radius: px(4);
+    overflow-x: auto;
+    font-family: "Courier New", monospace;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+  }
+
+  &__guide-list {
+    @include px(margin-top, 12);
+    @include px(padding-left, 20);
+    list-style: disc;
+    color: var(--color-text);
+
+    li {
+      @include px(margin-bottom, 6);
+    }
+  }
+}
+

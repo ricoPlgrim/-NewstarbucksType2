@@ -1,0 +1,606 @@
+@use "../../assets/scss/index.scss" as *;
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  transition: opacity 0.2s ease;
+
+  &--sheet {
+    align-items: flex-end;
+  }
+
+  &--full {
+    background: var(--color-overlay-dark);
+  }
+
+}
+
+.popup {
+  background: var(--color-card);
+  border-radius: px(18);
+  min-width: min(px(360), 92vw);
+  max-width: px(420);
+  box-shadow: var(--shadow-overlay-dark);
+  color: var(--color-text-dark);
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: px(14);
+
+  &--basic {
+    text-align: center;
+  }
+
+  &--sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0 auto;
+    max-width: px(640);
+    border-radius: px(20) px(20) 0 0;
+    padding-top: px(12);
+    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+    padding-bottom: px(20);
+    gap: px(8);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* 바깥은 숨기고, 스크롤은 body로 */
+    max-height: calc(100dvh - #{px(12)} - env(safe-area-inset-top, 0px));
+    /* 구형 브라우저 fallback */
+    max-height: calc(100vh - #{px(12)});
+
+    &.is-dragging {
+      transition: none;     
+    }
+    &.custom-bottom-sheet{
+      box-shadow: none;
+      border-radius: 0 !important;
+      background: transparent;
+      .popup__handle{
+        display: none;
+      }
+      .popup__body,
+      .popup__actions{
+        background: var(--color-card);
+        border-radius: px(18);
+        padding: 0;
+      }
+    }
+  }
+
+  &--full {
+    position: fixed;
+    inset: 0;
+    border-radius: 0;
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: px(12);
+    height: 100dvh;
+    overflow: hidden;
+  }
+  
+  &__content {
+    padding: 0 px(20) px(16) px(20);
+    display: flex;
+    flex-direction: column;
+    gap: px(12);
+  }
+  &--sheet &__content {
+    align-items: stretch;
+  }
+  
+  h4 {
+    color: var(--color-text-dark);
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-text-light);
+  }
+
+  &__handle {
+    width: px(42);
+    height: px(4);
+    background: var(--color-border);
+    border-radius: px(4);
+    margin: 0 auto px(12);
+    cursor: grab;
+    touch-action: none;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: px(12);
+    padding: px(20);
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: px(18);
+    cursor: pointer;
+    color: var(--color-text);
+    line-height: 1;
+  }
+
+  &__body {
+    color: var(--color-text-dark);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: px(6);
+    align-items: center;
+    text-align: center;
+
+    &--center {
+      text-align: center;
+    }
+  }
+
+  &--sheet &__body {
+    align-items: stretch;
+    text-align: left;
+    padding: 0 px(20) px(16) px(20);
+
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0; 
+  }
+
+  &__title {
+    margin: 0;
+    font-weight: 700;
+    color: var(--color-text-dark);
+  }
+
+  &__description {
+    margin: 0;
+    color: var(--color-text-lighter);
+  }
+
+  &__options {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    border-top: px(1) solid var(--color-border);
+    border-bottom: px(1) solid var(--color-border);
+  }
+
+  &__option-item {
+    display: flex;
+    align-items: center;
+    gap: px(12);
+    width: 100%;
+    padding: px(16);
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-radius: 0;
+
+    &:not(:last-child) {
+      border-bottom: px(1) solid var(--color-border);
+    }
+
+    &:hover {
+      background: var(--color-overlay-lighter);
+    }
+
+    &:active {
+      background: var(--color-overlay-light);
+    }
+  }
+
+  &__option-icon {
+    font-size: px(24);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  &__option-label {
+    font-size: px(16);
+    font-weight: 600;
+    color: var(--color-text-dark);
+    flex: 1;
+  }
+
+  &--full &__header {
+    padding: px(24);
+  }
+
+  &--full &__body {
+    flex: 1;
+    overflow-y: auto;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  &__image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--color-border);
+    border-radius: px(10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-tertiary);
+    padding: px(12);
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__image-icon {
+    font-size: 2.4rem;
+    color: var(--color-accent);
+  }
+
+  &__image-carousel {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  &__image-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  &__image-element {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  &__swiper {
+    width: 100%;
+    height: 100%;
+
+    .swiper-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+  }
+
+  &__nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: px(36);
+    height: px(36);
+    border-radius: 50%;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--color-text);
+    box-shadow: var(--shadow-overlay-medium);
+
+    &:hover {
+      background: var(--color-accent);
+      color: var(--color-white);
+      border-color: var(--color-accent);
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    svg {
+      width: px(20);
+      height: px(20);
+    }
+
+    &--prev {
+      left: px(8);
+    }
+
+    &--next {
+      right: px(8);
+    }
+  }
+
+
+  &__actions {
+    margin-top: px(8);
+    padding-top: px(8);
+    border-top: px(1) solid var(--color-border);
+
+    &--stack {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: px(10);
+      width: 100%;
+    }
+  }
+
+  &--sheet &__actions {
+    margin-top: px(8);
+    padding: px(16) px(20) px(20) px(20);
+    flex: 0 0 auto;
+    padding: px(16) px(20) calc(#{px(20)} + env(safe-area-inset-bottom, 0px)) px(20);
+  }
+
+  &--full &__actions {
+    margin-top: auto;
+    padding-top: px(16);
+    padding-bottom: calc(#{px(20)} + env(safe-area-inset-bottom, 0px));
+    flex-shrink: 0;
+    
+    &--stack {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__btn {
+    border-radius: px(10);
+    padding: px(12);
+    font-weight: 700;
+    font-size: px(14);
+    cursor: pointer;
+    border: px(1) solid var(--color-gray-border-light);
+    background: var(--color-bg-gray-darkest);
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    width: 100%;
+
+    &--primary {
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+      background: var(--color-card);
+
+      &:hover {
+        background: rgba(12, 124, 89, 0.08);
+      }
+    }
+
+    &--ghost {
+      color: var(--color-text-dark);
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+      }
+    }
+  }
+}
+
+.popup--image-zoom {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+
+  .popup__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding: px(12) px(16);
+  }
+
+  .popup__header-title {
+    display: flex;
+    align-items: center;
+    gap: px(8);
+  }
+
+  .popup__image-counter {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  // 헤더 정렬 모드: center
+  .popup__header--center {
+    justify-content: center;
+    text-align: center;
+
+    .popup__header-title {
+      justify-content: center;
+      width: 100%;
+    }
+
+    .popup__close {
+      position: absolute;
+      right: px(8);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .popup__zoom-hint {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: px(13);
+  }
+
+  .popup__image-viewport {
+    flex: 1;
+    overflow: hidden;
+    background: var(--color-card);
+    position: relative;
+    min-height: px(300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: pan-x pan-y pinch-zoom;
+    margin: 0;
+    padding: 0;
+    // 줌 시 스크롤 방지
+    overscroll-behavior: contain;
+  }
+
+  .popup__image-swiper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; // Swiper wrapper에 overflow 설정
+    margin: 0;
+    padding: 0;
+
+    .swiper-wrapper {
+      align-items: center;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    .swiper-slide {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      overflow: hidden; // 슬라이드 영역을 넘어가는 콘텐츠는 숨김
+      width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    .popup__image-zoom-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: grab;
+      width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+      touch-action: pan-x pan-y pinch-zoom;
+      will-change: transform; // 성능 최적화
+      // Swiper zoom이 transform을 직접 관리하므로 transition 제거
+      transition: none;
+      // 줌 시 컨테이너를 벗어나지 않도록 제한
+      max-width: 100%;
+      max-height: 100%;
+      overflow: hidden;
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
+
+    // Swiper가 자동으로 추가하는 zoom container 클래스
+    .swiper-zoom-container {
+      transition: none !important;
+    }
+
+    // Swiper 네비게이션 버튼 스타일
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: #fff;
+      background: rgba(114, 123, 134, 0.92);
+      width: px(36);
+      height: px(36);
+      border-radius: 50%;
+      box-shadow: 0 px(1) px(4) rgba(0, 0, 0, 0.18);
+      transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+      top: 50%;
+      transform: translateY(-50%);
+
+      &:hover {
+        background: rgba(114, 123, 134, 1);
+        box-shadow: 0 px(2) px(10) rgba(0, 0, 0, 0.22);
+        transform: translateY(-50%) scale(1.05);
+      }
+
+      &::after {
+        font-size: px(16);
+        font-weight: 800;
+      }
+    }
+
+    // Swiper 페이지네이션 스타일
+    .swiper-pagination {
+      bottom: px(16);
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-card);
+      border-radius: px(20);
+      padding: px(6) px(12);
+      font-size: px(14);
+      font-weight: 500;
+      box-shadow: 0 px(2) px(8) rgba(0, 0, 0, 0.1);
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+
+      .swiper-pagination-current {
+        color: var(--color-accent);
+      }
+
+      .swiper-pagination-total {
+        color: var(--color-text-dark);
+      }
+    }
+
+    // 확대 상태일 때 페이지네이션 및 네비게이션 버튼 숨기기
+    &.is-zoomed {
+      .swiper-pagination {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .swiper-button-next,
+      .swiper-button-prev {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+  }
+
+  .popup__image-slide {
+    width: 100%;
+    height: 100%;
+  }
+
+  .popup__image-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-card);
+    opacity: 0.9;
+    z-index: 10;
+  }
+
+  .popup__image-zoom-element {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    user-select: none;
+    -webkit-user-drag: none;
+    display: block;
+    // 줌 시 이미지가 컨테이너를 벗어나지 않도록
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
