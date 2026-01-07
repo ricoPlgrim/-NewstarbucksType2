@@ -3,7 +3,7 @@
   --color-card: #ffffff;
   --color-text: #1b1b1f;
   --color-muted: #5b5c60;
-  --color-accent: #0c7c59;
+  --color-accent: #0c7c59;    //green_01
   --color-border: rgba(12, 124, 89, 0.16);
   --shadow-soft: 0 12px 32px rgba(27, 27, 31, 0.08);
   --font-scale: 1;
@@ -75,6 +75,37 @@
   --color-scrollbar-thumb: rgba(0, 0, 0, 0.4);
   --color-scrollbar-thumb-hover: rgba(0, 0, 0, 0.5);
   --color-scrollbar-thumb-active: rgba(0, 0, 0, 0.6);
+
+
+  //현재 피그 기준 
+  /* Primary */
+  --color-green-01: #00A862;
+  --color-green-02: #006341;
+
+  /* Alert */
+  --color-red-01: #FF4B0E;
+
+  /* Font */
+  --color-font-01: #1E1E1E;
+  --color-font-02: #888888;
+  --color-font-03: #BBBBBB;
+  --color-font-04: #EEEEEE;
+  --color-font-05: #FFFFFF;
+
+  /* Line */
+  --color-line-01: #1E1E1E;
+  --color-line-02: #BBBBBB;
+  --color-line-03: #E5E5E5;
+  --color-line-04: #FFFFFF;
+
+  /* Bg */
+  --color-bg-01: #1E1E1E;
+  --color-bg-02: #BBBBBB;
+  --color-bg-03: #E5E5E5;
+  --color-bg-04: #EBEBEB;
+  --color-bg-05: #F6F6F6;
+  --color-bg-06: #FFFFFF;
+
 }
 
 :root[data-theme="dark"] {

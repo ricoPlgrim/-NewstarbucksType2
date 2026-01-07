@@ -1,0 +1,194 @@
+@use "../../assets/scss/index.scss" as *;
+.report-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--color-bg);
+
+  &__preview {
+    padding: px(20);
+    max-width: px(600);
+    margin: 0 auto;
+    background-color: var(--color-bg-secondary, #f5f5f5);
+    border-top: px(1) solid var(--color-border);
+    margin-top: px(32);
+  }
+
+  &__preview-header {
+    margin-bottom: px(20);
+    padding-bottom: px(16);
+    border-bottom: px(1) solid var(--color-border);
+  }
+
+  &__preview-title {
+    margin: 0 0 px(8) 0;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  &__preview-subtitle {
+    margin: 0;
+    color: var(--color-muted);
+  }
+
+  &__preview-content {
+    display: flex;
+    flex-direction: column;
+    gap: px(16);
+  }
+
+  &__preview-row {
+    display: flex;
+    gap: px(16);
+    align-items: flex-start;
+
+    &--full {
+      flex-direction: column;
+      gap: px(8);
+    }
+  }
+
+  &__preview-label {
+    min-width: px(100);
+    font-weight: 600;
+    color: var(--color-text);
+    flex-shrink: 0;
+  }
+
+  &__preview-value {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__preview-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: px(6);
+  }
+
+  &__preview-badge {
+    display: inline-block;
+    padding: px(4) px(12);
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    border-radius: px(16);
+    font-size: px(13);
+    font-weight: 500;
+  }
+
+  &__preview-textarea-input {
+    width: 100% !important;
+    
+    // Textarea 컴포넌트의 wrapper도 100% 너비
+    .textarea-field {
+      width: 100%;
+    }
+    
+    .textarea-field__wrapper {
+      width: 100%;
+    }
+    
+    textarea {
+      width: 100%;
+    }
+  }
+  
+  &__preview-row--full &__preview-value {
+    width: 100%;
+  }
+
+  &__form {
+    padding: px(20);
+    max-width: px(600);
+    margin: 0 auto;
+  }
+
+  &__section {
+    margin-bottom: px(32);
+  }
+
+  &__category {
+    display: flex;
+    align-items: center;
+    gap: px(12);
+    padding: px(16);
+    background-color: var(--color-bg-secondary, #f5f5f5);
+    border-radius: px(8);
+  }
+
+  &__category-icon {
+    width: px(48);
+    height: px(48);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg);
+    border-radius: px(8);
+    font-size: px(24);
+  }
+
+  &__category-text {
+    display: flex;
+    flex-direction: column;
+    gap: px(4);
+  }
+
+  &__category-label {
+    font-weight: 600;
+  }
+
+  &__label {
+    margin-bottom: px(12);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  &__button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: px(8);
+  }
+
+  &__select-btn {
+    min-width: px(100);
+  }
+
+  &__time-group {
+    display: flex;
+    gap: px(12);
+    flex-wrap: wrap;
+  }
+
+  &__date-picker,
+  &__time-picker {
+    flex: 1;
+    min-width: px(150);
+  }
+
+  &__textarea {
+    width: 100%;
+  }
+
+  &__footer {
+    background-color: var(--color-bg);
+    border-top: px(1) solid var(--color-border);
+    padding: px(16) px(20);
+    margin-top: px(32);
+  }
+
+  &__checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: px(12);
+    margin-bottom: px(16);
+    padding: px(12);
+    background-color: var(--color-bg-secondary, #f5f5f5);
+    border-radius: px(8);
+  }
+
+  &__submit-btn {
+    width: 100%;
+    font-size: px(16);
+    font-weight: 600;
+  }
+}
+

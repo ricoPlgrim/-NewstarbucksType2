@@ -1,0 +1,294 @@
+@use "../../assets/scss/index.scss" as *;
+.received-card-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--color-pink-light);
+
+  &__content {
+    padding-bottom: px(80);
+  }
+
+  &__content-inner {
+    padding: px(20);
+  }
+
+  &__sender-info {
+    background-color: var(--color-bg-secondary);
+    padding: px(12) px(16);
+    border-radius: px(8);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: px(8);
+  }
+
+  &__sender-name,
+  &__sender-location,
+  &__sender-date {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    &:first-child {
+      text-align: left;
+    }
+    
+    &:last-child {
+      text-align: right;
+    }
+  }
+
+  &__card-container {
+    border-radius: px(12);
+    padding: px(20) 0;
+    margin-bottom: px(24);
+    position: relative;
+    overflow: visible; // html2canvas 캡처를 위해
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  &__card {
+    border-radius: px(12);
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__card-image {
+    width: 100%;
+    margin-bottom: px(16);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    img {
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+  }
+
+  &__card-image-element {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  &__card-message {
+    position: absolute;
+    bottom: px(40);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-card);
+    padding: px(12) px(16);
+    border-radius: px(8);
+    width: calc(100% - px(32));
+    max-width: calc(100% - px(48));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: px(8);
+  }
+
+  &__message-part {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    &:first-child {
+      text-align: left;
+    }
+    
+    &:last-child {
+      text-align: right;
+    }
+  }
+
+  &__closing {
+    text-align: center;
+    padding: px(16) 0;
+  }
+
+  &__closing-title {
+    margin-bottom: px(8);
+  }
+
+  &__closing-message {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  &__public-toggle {
+    background-color: var(--color-card); 
+    padding: px(16) px(20);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__public-toggle-label {
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  &__public-toggle-switch {
+    .toggle {
+      gap: 0;
+    }
+
+    .toggle__text {
+      display: none;
+    }
+  }
+
+  // 편지지 UI (카드 공개 시)
+  &__letter {
+    background-color: var(--color-card);
+    border-radius: px(12);
+    padding: 0;
+    box-shadow: var(--shadow-overlay);
+    position: relative;
+    overflow: visible; // html2canvas 캡처를 위해
+    width: 100%;
+    box-sizing: border-box;
+    min-height: px(200); // 최소 높이 보장
+    
+    // 편지지 패턴 효과 (선택사항)
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: px(40);
+      width: px(1);
+      height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent px(20),
+        var(--color-overlay-light) px(20),
+        var(--color-overlay-light) px(21)
+      );
+      z-index: 0; // html2canvas 캡처를 위해
+    }
+  }
+
+  &__letter-header {
+    margin-bottom: px(24);
+    width: 100%;
+    background-color: var(--color-mint-light); // 연한 민트 그린 배경
+    border-radius: px(12) px(12) 0 0; // 상단만 둥근 모서리
+    overflow: hidden;
+    max-height: px(200);
+    min-height: px(80);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    img {
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      max-height: px(200);
+    }
+  }
+
+  &__letter-header-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  &__letter-body {
+    margin-bottom: px(24);
+    padding: 0 px(12);
+    padding-bottom: px(28);
+    border-bottom: px(1) solid var(--color-border);
+    position: relative;
+    z-index: 1; // 패턴 위에 표시
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  &__letter-line {
+    padding: px(6) 0;
+    border-bottom: px(1) solid var(--color-overlay-light);
+    text-align: center;
+  }
+
+  &__letter-message {
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+  }
+
+
+  &__actions {
+    position: absolute;
+    bottom: px(12);
+    right: px(12);
+    display: flex;
+    justify-content: flex-end;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  &__download-button {
+    width: px(32);
+    height: px(32);
+    background-color: var(--color-overlay-light);
+    border: none;
+    border-radius: px(6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    pointer-events: auto;
+    position: relative;
+    z-index: 11;
+    
+    svg {
+      width: px(20);
+      height: px(20);
+      color: var(--color-text-lighter);
+    }
+    
+    &:hover {
+      background-color: var(--color-overlay-light);
+      
+      svg {
+        color: var(--color-text-dark);
+      }
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+
+  &__footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: px(16) px(20);
+    background-color: var(--color-card);
+    z-index: 100;
+  }
+
+  &__reply-button {
+    width: 100%;
+  }
+}
+

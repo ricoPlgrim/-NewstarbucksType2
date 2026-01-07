@@ -1,0 +1,312 @@
+@use "../../assets/scss/index.scss" as *;
+.date-picker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: px(12);
+  min-width: px(260);
+}
+
+.date-picker__label {
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.date-picker__group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: px(6);
+}
+
+.date-picker__group-title {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.date-picker__input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: px(8);
+  padding: px(12) px(14);
+  border: 1px solid var(--color-border);
+  border-radius: px(12);
+  background: var(--color-card);
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+
+  span:first-child {
+    color: var(--color-text);
+  }
+}
+
+.date-picker__icon {
+  font-size: px(16);
+  color: var(--color-muted);
+}
+
+.date-picker__popover {
+  position: absolute;
+  top: calc(100% + px(8));
+  left: 0;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: px(14);
+  box-shadow: var(--shadow-overlay-large);
+  padding: px(14);
+  z-index: 20;
+  min-width: px(280);
+  display: flex;
+  flex-direction: column;
+  gap: px(12);
+}
+
+.date-picker__close {
+  width: 100%;
+  margin-top: px(8);
+  border: 1px solid var(--color-border) !important;
+  
+  &:hover {
+    border-color: var(--color-accent) !important;
+  }
+}
+
+.date-picker__section {
+  border: 1px solid var(--color-border);
+  border-radius: px(12);
+  padding: px(10);
+  background: var(--color-card);
+  box-shadow: var(--shadow-soft);
+}
+
+.date-picker__section-title {
+  margin: 0 0 px(8) 0;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.date-picker__range-preview {
+  margin: 0 0 px(8) 0;
+  font-size: px(13);
+  color: var(--color-muted);
+}
+/* react-day-picker overrides */
+.rdp {
+  margin: 0;
+  --rdp-cell-size: 36px;
+  --rdp-accent-color: var(--color-accent);
+  --rdp-background-color: var(--color-brand-primary-light);
+  --rdp-outline: 2px solid var(--color-accent);
+  --rdp-shadow: var(--shadow-overlay);
+}
+
+[data-theme="dark"] .rdp {
+  --rdp-background-color: var(--color-brand-primary-light);
+}
+
+.rdp-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: px(8);
+}
+
+.rdp-head {
+  color: var(--color-muted);
+  font-weight: 700;
+}
+
+.rdp-day {
+  border-radius: px(8);
+  color: var(--color-text);
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+
+  &:hover:not(.rdp-day_selected):not(.rdp-day_range_start):not(.rdp-day_range_end):not(.rdp-day_range_middle):not(.rdp-day_disabled) {
+    border-color: transparent !important;
+    color: var(--color-accent) !important;
+    background-color: transparent !important;
+  }
+}
+
+.rdp-day_selected:not([disabled]),
+.rdp-day_selected:focus-visible {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+  border-color: var(--color-accent);
+  border-radius: px(8);
+}
+
+// Range 모드 스타일 - L자 라인 완전 제거
+.rdp-day {
+  &::before,
+  &::after {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+    border: none !important;
+  }
+}
+
+.rdp-day_range_start,
+.rdp-day_range_end,
+.rdp-day_range_middle {
+  &::before,
+  &::after {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+    border: none !important;
+  }
+}
+
+.rdp-day_range_start,
+.rdp-day_range_end {
+  background-color: var(--color-accent) !important;
+  color: var(--color-white) !important;
+  border: 1px solid var(--color-accent) !important;
+  border-radius: px(8) !important;
+  position: relative !important;
+
+  &::before,
+  &::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  &:hover {
+    background-color: var(--color-accent) !important;
+    color: var(--color-white) !important;
+    border: 1px solid var(--color-accent) !important;
+    border-radius: px(8) !important;
+  }
+}
+
+.rdp-day_range_middle {
+  background-color: var(--rdp-background-color) !important;
+  color: var(--color-text) !important;
+  border: 1px solid transparent !important;
+  border-radius: px(8) !important;
+  position: relative !important;
+
+  &::before,
+  &::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  &:hover {
+    background-color: var(--rdp-background-color) !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-accent) !important;
+    border-radius: px(8) !important;
+  }
+}
+
+[data-theme="dark"] .rdp-day_range_middle {
+  background-color: var(--color-gray-dark) !important;
+  color: var(--color-text) !important;
+  
+  &:hover {
+    background-color: var(--color-gray-dark) !important;
+    color: var(--color-text) !important;
+  }
+}
+
+.rdp-day_range_start.rdp-day_range_end {
+  border-radius: px(8) !important;
+}
+
+.rdp-day_today:not(.rdp-day_selected) {
+  color: var(--color-accent);
+  border-color: var(--color-brand-primary-light);
+}
+
+.rdp-caption_label {
+  font-weight: 800;
+  color: var(--color-text);
+  font-size: px(16);
+}
+
+.rdp-nav_button {
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  border-radius: px(8);
+  padding: px(4);
+  width: px(32);
+  height: px(32);
+}
+
+.rdp-head_cell {
+  padding: px(4) 0;
+  color: var(--color-muted);
+}
+
+.rdp-day{
+  border: none !important;
+  border-radius: 0 !important;
+}
+.rdp-day:hover{
+  border: none !important;
+  border-radius: 0 !important;
+}
+.rdp-day_button{
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.date-picker__popover--time,
+.date-picker__popover--datetime {
+  max-height: px(500);
+  overflow-y: auto;
+}
+
+.date-picker__time-section {
+  margin-bottom: px(16);
+
+  &:last-of-type {
+    margin-bottom: px(12);
+  }
+}
+
+.date-picker__time-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: px(6);
+  max-height: px(200);
+  overflow-y: auto;
+  padding: px(4);
+  margin: px(-4);
+}
+
+.date-picker__time-minutes {
+  display: flex;
+  gap: px(8);
+}
+
+.date-picker__time-btn {
+  padding: px(8) px(12);
+  background-color: var(--color-bg);
+  border: px(1) solid var(--color-border);
+  border-radius: px(8);
+  cursor: pointer;
+  font-size: px(13);
+  color: var(--color-text);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: var(--color-brand-primary-light);
+    border-color: var(--color-accent);
+  }
+
+  &.is-selected {
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    border-color: var(--color-accent);
+  }
+}

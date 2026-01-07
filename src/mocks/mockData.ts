@@ -1,0 +1,226 @@
+// 공통 목업 데이터와 비동기 호출 유틸리티
+const clone = <T,>(data: T): T => JSON.parse(JSON.stringify(data)) as T;
+
+type WithLatencyOptions = {
+  delay?: number;
+  shouldFail?: boolean;
+};
+
+const withLatency = <T,>(
+  data: T,
+  { delay = 800, shouldFail = false }: WithLatencyOptions = {}
+): Promise<T> =>
+  new Promise<T>((resolve, reject) => {
+    setTimeout(() => {
+      if (shouldFail) {
+        reject(new Error("목업 데이터 로드 실패"));
+        return;
+      }
+      resolve(clone(data));
+    }, delay);
+  });
+
+const mockData = {
+  id: 101,
+  title: "목업 데이터",
+  content: "비동기 요청을 흉내낸 목업 응답 예시입니다.",
+  timestamp: new Date().toLocaleString(),
+};
+
+export const mockUrlData = [
+  {
+    id: 1,
+    depth1: "인증",
+    depth2: "로그인",
+    depth3: "",
+    depth4: "",
+    url: "/login",
+    description: "로그인 페이지",
+  },
+  {
+    id: 2,
+    depth1: "보고",
+    depth2: "보고작성",
+    depth3: "",
+    depth4: "",
+    url: "/report",
+    description: "보고 작성 페이지 (재해시설 보고)",
+  },
+  {
+    id: 3,
+    depth1: "모바일 오피스",
+    depth2: "홈",
+    depth3: "",
+    depth4: "",
+    url: "/mobile-office",
+    description: "모바일 오피스 홈 페이지 (3x3 그리드 메뉴, 공지사항, 날씨/프로모션 카드, 하단 네비게이션 포함)",
+  },
+  {
+    id: 4,
+    depth1: "모바일 오피스",
+    depth2: "카드 보내기",
+    depth3: "",
+    depth4: "",
+    url: "/send-card",
+    description: "카드 보내기 페이지 (수신자 선택, 카드 선택, 메시지 입력, 발송 옵션 선택)",
+  },
+  {
+    id: 5,
+    depth1: "모바일 오피스",
+    depth2: "받은 카드",
+    depth3: "",
+    depth4: "",
+    url: "/received-card",
+    description: "받은 카드 페이지 (카드 공개 토글, 이미지 저장 기능 포함)",
+  },
+  {
+    id: 6,
+    depth1: "모바일 오피스",
+    depth2: "유지보수",
+    depth3: "",
+    depth4: "",
+    url: "/maintenance",
+    description: "유지보수 페이지 (대시보드, 수선 요청 상세, StepProgress 컴포넌트 포함)",
+  },
+  {
+    id: 7,
+    depth1: "모바일 오피스",
+    depth2: "그린에이프런",
+    depth3: "",
+    depth4: "",
+    url: "/green-apron",
+    description: "그린에이프런 카드 페이지 (INBOX/SENT 카드 관리, 새 카드 알림, 프로모션, 파트너 어워드)",
+  },
+  {
+    id: 8,
+    depth1: "모바일 오피스",
+    depth2: "유지보수",
+    depth3: "진행현황",
+    depth4: "",
+    url: "/progress-status",
+    description: "진행현황 페이지 (진행상태 필터, 상태별 필터 버튼, 진행현황 리스트)",
+  },
+];
+
+// 가이드/데모용 추가 목업 데이터 (차후 각 컴포넌트에서 비동기 사용 예정)
+export const mockToastMessages = [
+  { id: 1, type: "success", message: "저장되었습니다." },
+  { id: 2, type: "warning", message: "네트워크가 불안정합니다." },
+  { id: 3, type: "danger", message: "저장에 실패했습니다." },
+];
+
+export const mockTabs = [
+  { id: "tab-1", label: "탭 1", content: "탭 1 내용" },
+  { id: "tab-2", label: "탭 2", content: "탭 2 내용" },
+  { id: "tab-3", label: "탭 3", content: "탭 3 내용" },
+];
+
+export const mockDropdownOptions = [
+  { value: "apple", label: "사과" },
+  { value: "banana", label: "바나나" },
+  { value: "cherry", label: "체리" },
+];
+
+export const mockListSyncOptions = [
+  { value: "react", label: "React" },
+  { value: "vue", label: "Vue" },
+  { value: "svelte", label: "Svelte" },
+  { value: "next", label: "Next.js" },
+  { value: "astro", label: "Astro" },
+];
+
+export const mockCarouselSlides = [
+  { id: 1, title: "슬라이드 1", description: "첫 번째 슬라이드" },
+  { id: 2, title: "슬라이드 2", description: "두 번째 슬라이드" },
+  { id: 3, title: "슬라이드 3", description: "세 번째 슬라이드" },
+];
+
+export const mockTableBasicRows = [
+  { id: 1, title: "모집 공고 A", date: "2025-01-03", attachment: "guide.pdf", views: 1280, ratio: "12:1" },
+  { id: 2, title: "모집 공고 B", date: "2025-01-12", attachment: null, views: 860, ratio: "9:1" },
+  { id: 3, title: "모집 공고 C", date: "2025-02-02", attachment: "terms.docx", views: 432, ratio: "5:1" },
+  { id: 4, title: "모집 공고 D", date: "2025-02-14", attachment: "spec.xlsx", views: 2210, ratio: "18:1" },
+  { id: 5, title: "모집 공고 E", date: "2025-03-01", attachment: null, views: 642, ratio: "7:1" },
+];
+
+export const mockTableWideHeaders = ["번호", "제목", "등록일", "첨부", "조회수", "경쟁률", "상태", "분류", "담당자", "마감일", "비고"];
+
+export const mockTableWideRows = [
+  {
+    id: 1,
+    title: "데이터 분석가 채용",
+    date: "2025-01-07",
+    attachment: "jd.pdf",
+    views: 3210,
+    ratio: "15:1",
+    status: "진행중",
+    category: "채용",
+    owner: "홍길동",
+    deadline: "2025-02-01",
+    note: "온라인 면접",
+  },
+  {
+    id: 2,
+    title: "프론트엔드 인턴 모집",
+    date: "2025-01-15",
+    attachment: "apply.docx",
+    views: 1880,
+    ratio: "22:1",
+    status: "접수중",
+    category: "인턴",
+    owner: "김개발",
+    deadline: "2025-02-10",
+    note: "리액트 과제 포함",
+  },
+  {
+    id: 3,
+    title: "디자인 시스템 워크숍",
+    date: "2025-01-20",
+    attachment: null,
+    views: 940,
+    ratio: "4:1",
+    status: "마감임박",
+    category: "교육",
+    owner: "이기획",
+    deadline: "2025-01-30",
+    note: "오프라인",
+  },
+];
+
+export const mockSampleHero = {
+  badge: "Page Template",
+  title: "프로젝트용 샘플 페이지",
+  lead: "헤더/푸터는 공통 컴포넌트, 본문은 자유롭게 교체할 수 있도록 만든 기본 레이아웃입니다.",
+  primaryCta: "Primary CTA",
+  secondaryCta: "Secondary",
+};
+
+export const mockSampleCards = [
+  { id: 1, title: "블록 1", desc: "여기에 카드형 콘텐츠를 배치합니다." },
+  { id: 2, title: "블록 2", desc: "리스트, 표, 폼 등을 넣을 수 있습니다." },
+  { id: 3, title: "블록 3", desc: "그래프, 배너 등 원하는 모듈을 추가하세요." },
+];
+
+export const mockInfiniteScrollItems = Array.from({ length: 50 }, (_, i) => ({
+  id: i + 1,
+  title: `리스트 아이템 ${i + 1}`,
+  description: `이것은 ${i + 1}번째 리스트 아이템의 설명입니다. 인피니티 스크롤을 통해 자동으로 더 많은 데이터를 불러옵니다.`,
+}));
+
+// 공통 fetch 헬퍼
+export const fetchMockData = (options = {}) =>
+  withLatency({ ...mockData, timestamp: new Date().toLocaleString() }, { delay: 1200, ...options });
+export const fetchMockUrls = (options = {}) => withLatency(mockUrlData, { delay: 800, ...options });
+export const fetchMockToastMessages = (options = {}) => withLatency(mockToastMessages, { delay: 600, ...options });
+export const fetchMockTabs = (options = {}) => withLatency(mockTabs, { delay: 500, ...options });
+export const fetchMockDropdownOptions = (options = {}) => withLatency(mockDropdownOptions, { delay: 500, ...options });
+export const fetchMockListSyncOptions = (options = {}) => withLatency(mockListSyncOptions, { delay: 500, ...options });
+export const fetchMockCarouselSlides = (options = {}) => withLatency(mockCarouselSlides, { delay: 700, ...options });
+export const fetchMockTableBasic = (options = {}) => withLatency(mockTableBasicRows, { delay: 650, ...options });
+export const fetchMockTableWide = (options = {}) =>
+  withLatency({ headers: mockTableWideHeaders, rows: mockTableWideRows }, { delay: 700, ...options });
+export const fetchMockSamplePage = (options = {}) =>
+  withLatency({ hero: mockSampleHero, cards: mockSampleCards }, { delay: 600, ...options });
+export const fetchMockInfiniteScrollItems = (options = {}) =>
+  withLatency(mockInfiniteScrollItems, { delay: 500, ...options });
+

@@ -2,9 +2,6 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header/Header";
 import { getRouteMeta } from "../routes/getRouteMeta";
-import type {
-  HeaderBottomSheetOptionMeta,
-} from "../types/layout";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
@@ -16,7 +13,7 @@ export default function RootLayout() {
   const bottomSheetOptions =
   meta.headerBottomSheetOptions?.map(({ target, ...rest }) => ({
     ...rest,
-    onClick: target ? () => navigate(target) : undefined,
+    onClick: target ? () => navigate(target) : undefined, // ✅ target이 있을 때만 navigate 실행
   }));
 
   // ✅ 헤더가 없는 페이지

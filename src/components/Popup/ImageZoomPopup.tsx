@@ -72,6 +72,7 @@ const ImageZoomPopup = ({
 
   const handleImageLoad = (index: number) => {
     setIsLoading((prev) => ({ ...prev, [index]: false }));
+    swiperRef.current?.update();
   };
 
   const handleImageError = (index: number) => {
@@ -178,6 +179,7 @@ const ImageZoomPopup = ({
             onZoomChange={(swiper: SwiperInstance, scale: number) => {
               void swiper;
               setIsZoomed(scale > 1);
+              swiper.allowTouchMove = scale <= 1; // 줌 인 경우 스와이퍼 이동 금지
             }}
             className={`popup__image-swiper ${isZoomed ? "is-zoomed" : ""}`}
           >

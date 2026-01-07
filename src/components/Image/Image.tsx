@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import PropTypes from "prop-types";
 import "./Image.scss";
 import type { ImgHTMLAttributes } from "react";
@@ -37,64 +37,54 @@ const Image = ({
   const [aspectRatio, setAspectRatio] = useState<AspectRatio | null>(null);
   const [fallbackError, setFallbackError] = useState(false);
 
-  // 기본 noimage 이미지 URL (public 폴더의 no_image.png 사용)
-  const noImageUrl = fallbackSrc || `${process.env.PUBLIC_URL || ""}/no_image.png`;
+  // ✅ 최신 콜백 유지 (부모에서 매 렌더마다 새 함수 내려와도 안전)
+  const onLoadRef = useRef<ImageProps["onLoad"]>(onLoad);
+  const onErrorRef = useRef<ImageProps["onError"]>(onError);
 
   useEffect(() => {
+    onLoadRef.current = onLoad;
+  }, [onLoad]);
+
+  useEffect(() => {
+    onErrorRef.current = onError;
+  }, [onError]);
+
+  // 기본 noimage 이미지 URL (public 폴더의 no_image.png 사용)
+  const baseUrl = useMemo(() => (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/"), []);
+  const noImageUrl = fallbackSrc || `${baseUrl}no_image.png`;
+
+  // ✅ src 바뀔 때만 상태 리셋
+  useEffect(() => {
     setFallbackError(false);
-    setAspectRatio(null); // ✅ src 바뀌면 비율도 초기화
+    setAspectRatio(null);
 
     if (!src) {
       setImageStatus("error");
       return;
     }
-
     setImageStatus("loading");
+  }, [src]);
 
-    // 이미지 로드를 위한 임시 img 요소 생성
-    const img = document.createElement("img");
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
 
-    img.onload = () => {
-      setImageStatus("loaded");
+    // 비율 계산
+    const ratio = img.naturalWidth / img.naturalHeight;
+    if (ratio > 1.1) setAspectRatio("landscape");
+    else if (ratio < 0.9) setAspectRatio("portrait");
+    else setAspectRatio("square");
 
-      const ratio = img.naturalWidth / img.naturalHeight;
-      if (ratio > 1.1) {
-        setAspectRatio("landscape");
-      } else if (ratio < 0.9) {
-        setAspectRatio("portrait");
-      } else {
-        setAspectRatio("square");
-      }
-
-      onLoad?.(img);
-    };
-
-    img.onerror = () => {
-      setImageStatus("error");
-      onError?.();
-    };
-
-    img.src = src;
-
-    // ✅ cleanup: src가 빠르게 바뀔 때 이벤트 정리(안전)
-    return () => {
-      img.onload = null;
-      img.onerror = null;
-    };
-  }, [src, onLoad, onError]);
+    setImageStatus("loaded");
+    onLoadRef.current?.(img);
+  };
 
   const handleImageError = () => {
     setImageStatus("error");
-    onError?.();
+    onErrorRef.current?.();
   };
 
   const handleFallbackError = () => {
     setFallbackError(true);
-  };
-
-  const handleImageLoad = () => {
-    setImageStatus("loaded");
-    onLoad?.();
   };
 
   // 클래스 조합
@@ -107,11 +97,6 @@ const Image = ({
   ]
     .filter(Boolean)
     .join(" ");
-
-  // 로딩 중일 때는 아무것도 렌더링하지 않음 (액박 방지)
-  if (imageStatus === "loading") {
-    return null;
-  }
 
   // 에러 상태 처리
   if (imageStatus === "error") {
@@ -136,7 +121,7 @@ const Image = ({
     );
   }
 
-  // 정상 로드된 이미지 표시
+  // ✅ loading이어도 DOM 유지 (Swiper 레이아웃 흔들림 방지)
   return (
     <img
       src={src}
@@ -144,6 +129,11 @@ const Image = ({
       className={classes}
       width={width}
       height={height}
+      style={{
+        width,
+        height,
+        opacity: imageStatus === "loading" ? 0 : 1,
+      }}
       onLoad={handleImageLoad}
       onError={handleImageError}
       {...props}

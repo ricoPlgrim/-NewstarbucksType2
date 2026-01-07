@@ -1,0 +1,118 @@
+@use "../../assets/scss/index.scss" as *;
+.notice {
+  border: px(1) solid var(--color-border);
+  border-radius: px(12);
+  background: var(--color-card);
+  padding: px(16);
+  display: flex;
+  flex-direction: column;
+  gap: px(12);
+  box-shadow: var(--shadow-soft);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: px(8);
+    min-width: 0; // flexbox 오버플로우 방지
+
+    h3 {
+      margin: 0;
+      @include px(font-size, 18);
+      font-weight: 700;
+      color: var(--color-text);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+  }
+
+  &__more {
+    border: 1px solid var(--color-border);
+    background: transparent;
+    border-radius: px(8);
+    padding: px(6) px(10);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0; // 버튼 크기 고정
+    white-space: nowrap; // 텍스트 줄바꿈 방지
+
+    &:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      background: rgba(12, 124, 89, 0.08);
+    }
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: px(10);
+  }
+
+  &__skeleton {
+    display: grid;
+    gap: px(10);
+  }
+
+  &__item {
+    min-width: 0; // flexbox 오버플로우 방지
+  }
+
+  &__item-link {
+    display: flex;
+    justify-content: space-between;
+    gap: px(12);
+    align-items: center;
+    min-width: 0; // flexbox 오버플로우 방지
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(12, 124, 89, 0.04);
+      border-radius: px(8);
+    }
+  }
+
+  &__title {
+    display: inline-flex;
+    align-items: center;
+    gap: px(8);
+    color: var(--color-text);
+    font-weight: 600;
+    line-height: 1.4;
+    min-width: 0; // flexbox 오버플로우 방지
+    flex: 1; // 남은 공간 차지
+    overflow: hidden; // 텍스트 오버플로우 처리
+    
+    // 제목 텍스트 부분 (span)
+    > span:not(.notice__badge) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+      flex: 1; // 남은 공간 차지
+    }
+  }
+
+  &__badge {
+    padding: px(4) px(8);
+    border-radius: px(999);
+    background: rgba(12, 124, 89, 0.12);
+    color: var(--color-accent);
+    @include px(font-size, 11);
+    font-weight: 700;
+  }
+
+  &__date {
+    color: var(--color-muted);
+    @include px(font-size, 12);
+    flex-shrink: 0;
+  }
+}
+
+

@@ -1,0 +1,153 @@
+@use "../../assets/scss/index.scss" as *;
+.tabs {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: px(16);
+
+  &__tablist {
+    display: flex;
+    gap: px(8);
+    width: 100%;
+  }
+
+  &__button {
+    flex: 1;
+    border: px(1) solid var(--color-border);
+    background-color: var(--color-card);
+    padding: px(10) px(16);
+    border-radius: px(999);
+    font-weight: 600;
+    color: var(--color-text);
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: rgba(var(--color-accent-rgb), 0.1);
+      border-color: var(--color-accent);
+    }
+
+    &[aria-selected="true"],
+    &.is-active {
+      background-color: var(--color-accent);
+      color: #fff;
+      border-color: var(--color-accent);
+    }
+  }
+
+  &__tabpanel {
+    border: px(1) solid var(--color-border);
+    border-radius: px(12);
+    padding: px(16);
+    background-color: var(--color-card);
+    color: var(--color-text);
+    line-height: 1.5;
+  }
+
+  // Swiper 타입
+  &--swiper {
+    .tabs__wrapper {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .tabs__swiper {
+      width: 100%;
+      max-width: 100%;
+      padding: px(4) 0; // 스크롤 영역 확보
+      margin: 0;
+    }
+
+    .tabs__slide {
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    .tabs__button {
+      flex: none;
+      min-width: fit-content;
+      white-space: nowrap;
+    }
+  }
+
+  // Scroll 타입
+  &--scroll {
+    .tabs__scroll-container {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-scrollbar-thumb) transparent;
+      position: relative;
+
+      &::-webkit-scrollbar {
+        height: px(7);
+        -webkit-appearance: none;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+        border: none;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: var(--color-scrollbar-thumb);
+        border-radius: px(3.5);
+        border: none;
+        background-clip: padding-box;
+        transition: opacity 0.15s ease, background-color 0.15s ease;
+        opacity: 0.4;
+        min-width: px(20);
+
+        &:hover {
+          background: var(--color-scrollbar-thumb-hover);
+          opacity: 0.6;
+        }
+
+        &:active {
+          background: var(--color-scrollbar-thumb-active);
+          opacity: 0.8;
+        }
+      }
+    }
+
+    .tabs__tablist {
+      display: inline-flex;
+      min-width: 100%;
+      width: auto;
+      padding: px(4) 0;
+      gap: px(8);
+    }
+
+    .tabs__button {
+      flex: none;
+      min-width: fit-content;
+      white-space: nowrap;
+    }
+  }
+
+  // Default 타입
+  &--default {
+    .tabs__tablist {
+      display: flex;
+      gap: px(8);
+      width: 100%;
+    }
+
+    .tabs__button {
+      flex: 1;
+    }
+  }
+}
+
+// Swiper 커스텀 스타일
+.tabs__swiper {
+  .swiper-slide {
+    width: auto;
+  }
+}
+

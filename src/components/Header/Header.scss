@@ -287,7 +287,7 @@
     position: fixed;
     top: 0;
     left: -100%;
-    width: px-to-rem(300);
+    width: px(300);
     height: 100vh;
     height: 100dvh;
     background-color: var(--color-bg);
@@ -298,8 +298,8 @@
     overflow-y: auto;
 
     &-inner {
-      padding: px-to-rem(20);
-      padding-top: px-to-rem(60); // 닫기 버튼 공간
+      padding: px(20);
+      padding-top: px(60); // 닫기 버튼 공간
     }
 
     &.is-open {
@@ -308,10 +308,10 @@
 
     &-close {
       position: absolute;
-      top: px-to-rem(20);
-      right: px-to-rem(20);
-      width: px-to-rem(40);
-      height: px-to-rem(40);
+      top: px(20);
+      right: px(20);
+      width: px(40);
+      height: px(40);
       background: none;
       border: none;
       cursor: pointer;
@@ -324,8 +324,8 @@
       padding: 0;
 
       svg {
-        width: px-to-rem(20);
-        height: px-to-rem(20);
+        width: px(20);
+        height: px(20);
         display: block;
       }
 
@@ -353,28 +353,28 @@
     }
 
     &-item {
-      margin-bottom: px-to-rem(8);
+      margin-bottom: px(8);
 
       &--has-children {
-        margin-bottom: px-to-rem(4);
+        margin-bottom: px(4);
       }
     }
 
     &-divider {
       height: 1px;
       background-color: var(--color-border);
-      margin: px-to-rem(16) 0;
+      margin: px(16) 0;
       list-style: none;
     }
 
     &-link {
       width: 100%;
-      padding: px-to-rem(12) px-to-rem(16);
+      padding: px(12, 16);
       background: none;
       border: 1px solid transparent;
-      border-radius: px-to-rem(8);
+      border-radius: px(8);
       color: var(--color-text);
-      font-size: px-to-rem(16);
+      font-size: px(16);
       font-weight: 500;
       text-align: left;
       cursor: pointer;
@@ -401,8 +401,8 @@
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: px-to-rem(14);
-          height: px-to-rem(14);
+          width: px(14);
+          height: px(14);
           color: var(--color-text);
           opacity: 0.6;
           transition: transform 0.1s ease;
@@ -436,31 +436,31 @@
       // 높이만 애니메이션 (margin, padding은 즉시 적용)
       transition: max-height 0.3s ease;
       // 닫혀있을 때도 마진/패딩은 유지 (텍스트는 보이지 않지만 공간은 확보)
-      margin-left: px-to-rem(16);
+      margin-left: px(16);
       padding: 0;
 
       // 열려있을 때 스타일 (마진만 추가 조정)
       &.is-open {
-        margin-top: px-to-rem(8);
+        margin-top: px(8);
       }
 
       &--depth3 {
         // 3뎁스는 2뎁스보다 더 안쪽으로 들여쓰기
-        margin-left: px-to-rem(32);
+        margin-left: px(32);
       }
     }
 
     &-subitem {
-      margin-bottom: px-to-rem(4);
+      margin-bottom: px(4);
     }
 
     &-sublink {
       display: block;
-      padding: px-to-rem(10) px-to-rem(14);
+      padding: px(10, 14);
       color: var(--color-text);
-      font-size: px-to-rem(14);
+      font-size: px(14);
       text-decoration: none;
-      border-radius: px-to-rem(6);
+      border-radius: px(6);
       // all 대신 구체적인 속성만 transition (자식 요소의 transform에 영향 주지 않도록)
       transition: background-color 0.2s ease, color 0.2s ease;
       cursor: pointer;
@@ -483,8 +483,8 @@
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: px-to-rem(14);
-          height: px-to-rem(14);
+          width: px(14);
+          height: px(14);
           color: var(--color-text);
           opacity: 0.6;
           transition: transform 0.1s ease;

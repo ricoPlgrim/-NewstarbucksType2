@@ -1,0 +1,228 @@
+@use "../../assets/scss/index.scss" as *;
+// ===== Spacing Token =====
+.spacing-token {
+  display: flex;
+  flex-direction: column;
+  gap: px(12);
+  padding: px(20);
+  border: 1px solid rgba(12, 124, 89, 0.15);
+  border-radius: px(16);
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-accent), rgba(12, 124, 89, 0.6));
+    opacity: 0;
+  }
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(12, 124, 89, 0.15), 0 4px 8px rgba(12, 124, 89, 0.1);
+
+    .spacing-token__visual {
+      background: linear-gradient(135deg, rgba(12, 124, 89, 0.15), rgba(12, 124, 89, 0.08));
+    }
+  }
+
+  &__visual {
+    width: 100%;
+    min-height: px(100);
+    max-height: px(140);
+    background: linear-gradient(135deg, rgba(12, 124, 89, 0.12), rgba(12, 124, 89, 0.06));
+    border: 2px dashed rgba(12, 124, 89, 0.4);
+    border-radius: px(12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: visible;
+    margin: 0 auto;
+
+    // 간격을 시각적으로 표현하는 요소 (가로선)
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+      opacity: 0.5;
+    }
+
+    // 간격을 시각적으로 표현하는 요소 (세로선)
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(180deg, transparent, var(--color-accent), transparent);
+      opacity: 0.5;
+    }
+  }
+
+  &__label {
+    @include px(font-size, 13);
+    font-weight: 800;
+    color: var(--color-accent);
+    background: linear-gradient(135deg, rgba(12, 124, 89, 0.1), rgba(12, 124, 89, 0.05));
+    padding: px(6) px(12);
+    border-radius: px(8);
+    border: 1.5px solid var(--color-accent);
+    z-index: 2;
+    position: relative;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(12, 124, 89, 0.1);
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: px(6);
+    align-items: center;
+    text-align: center;
+  }
+
+  &__name {
+    @include px(font-size, 16);
+    font-weight: 800;
+    color: var(--color-text);
+    letter-spacing: 0.5px;
+  }
+
+  &__value {
+    @include px(font-size, 13);
+    font-family: "Fira Code", "Courier New", monospace;
+    color: var(--color-muted);
+    font-weight: 500;
+    background: rgba(12, 124, 89, 0.05);
+    padding: px(4) px(10);
+    border-radius: px(6);
+    border: 1px solid rgba(12, 124, 89, 0.1);
+  }
+}
+
+// ===== Spacing Scale =====
+.spacing-scale {
+  display: flex;
+  flex-direction: column;
+  gap: px(24);
+  padding: px(28);
+  border: 1px solid rgba(12, 124, 89, 0.12);
+  border-radius: px(20);
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  min-height: 0;
+  height: auto;
+
+  &__title {
+    margin: 0;
+    @include px(font-size, 22);
+    font-weight: 800;
+    color: var(--color-text);
+    padding-bottom: px(16);
+    letter-spacing: -0.3px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: px(20);
+    width: 100%;
+  }
+}
+
+// ===== Spacing Example =====
+.spacing-example {
+  display: flex;
+  flex-direction: column;
+  gap: px(16);
+  padding: px(20);
+  border: 1px solid var(--color-border);
+  border-radius: px(16);
+  background-color: var(--color-card);
+  box-shadow: var(--shadow-soft);
+  width: 100%;
+  min-height: 0;
+  height: auto;
+
+  &__title {
+    margin: 0;
+    @include px(font-size, 18);
+    font-weight: 700;
+    color: var(--color-text);
+    padding-bottom: px(12);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: px(16);
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: px(8);
+    padding: px(16);
+    border: 1px solid var(--color-border);
+    border-radius: px(12);
+    background-color: var(--color-bg);
+  }
+
+  &__label {
+    @include px(font-size, 14);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  &__preview {
+    display: flex;
+    align-items: center;
+    padding: px(16);
+    background-color: rgba(12, 124, 89, 0.05);
+    border-radius: px(8);
+    border: 1px dashed var(--color-border);
+    min-height: px(80);
+  }
+
+  &__box {
+    flex: 1;
+    height: px(60);
+    background: linear-gradient(135deg, var(--color-accent), rgba(12, 124, 89, 0.7));
+    border-radius: px(8);
+    border: 1px solid var(--color-accent);
+  }
+
+  &__code {
+    @include px(font-size, 12);
+    font-family: "Fira Code", "Courier New", monospace;
+    color: var(--color-muted);
+    padding: px(8) px(12);
+    background-color: var(--color-card);
+    border-radius: px(6);
+    border: 1px solid var(--color-border);
+  }
+}
+
+// 반응형
+@media (max-width: 768px) {
+  .spacing-scale__grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: px(12);
+  }
+}
+

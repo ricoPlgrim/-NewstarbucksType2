@@ -1,0 +1,200 @@
+@use "../../assets/scss/index.scss" as *;
+.file-upload-demo {
+  display: flex;
+  flex-direction: column;
+  gap: px(16);
+}
+
+.file-upload-demo__container {
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  // 파일이 있을 때는 내용물 크기에 맞춤
+  &:has(.file-upload-demo__preview-list) {
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  // 파일이 없을 때는 전체 너비
+  &:not(:has(.file-upload-demo__preview-list)) {
+    width: 100%;
+  }
+}
+
+.file-upload-demo__upload-area {
+  display: block;
+  width: px(120);
+  min-height: px(120);
+  border-radius: px(8);
+  background-color: var(--color-bg-secondary);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: var(--color-bg-gray-light);
+  }
+
+  &--small {
+    width: px(120);
+    min-height: px(120);
+    height: px(120);
+  }
+}
+
+.file-upload-demo__input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.file-upload-demo__icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-gray-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: px(48);
+    height: px(48);
+  }
+}
+
+.file-upload-demo__upload-area--small .file-upload-demo__icon svg {
+  width: px(32);
+  height: px(32);
+}
+
+.file-upload-demo__preview-list {
+  display: flex;
+  gap: px(12);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: px(4);
+
+  // 스크롤바 스타일
+  &::-webkit-scrollbar {
+    height: px(8);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--color-bg-gray-lighter);
+    border-radius: px(4);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-gray-medium);
+    border-radius: px(4);
+
+    &:hover {
+      background: var(--color-gray-dark);
+    }
+  }
+}
+
+.file-upload-demo__preview-item {
+  width: px(120);
+  height: px(120);
+  flex-shrink: 0;
+  position: relative;
+  border-radius: px(8);
+  overflow: hidden;
+  background: var(--color-bg);
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-overlay-medium);
+  }
+}
+
+.file-upload-demo__preview-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: px(8);
+  overflow: hidden;
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-upload-demo__preview-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 1;
+}
+
+.file-upload-demo__preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  
+  // Image 컴포넌트의 비율 클래스와 함께 사용할 때
+  &.image--landscape,
+  &.image--portrait,
+  &.image--square {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.file-upload-demo__preview-remove {
+  position: absolute;
+  top: px(4);
+  right: px(4);
+  width: px(24);
+  height: px(24);
+  border: none;
+  border-radius: 50%;
+  background: var(--color-overlay-darkest);
+  color: var(--color-white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 1;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.9);
+    transform: scale(1.1);
+  }
+
+  svg {
+    display: block;
+    width: px(14);
+    height: px(14);
+  }
+}
+
+.file-upload-demo__empty {
+  border: px(1) solid var(--color-border);
+  border-radius: px(10);
+  padding: px(20);
+  background-color: var(--color-bg);
+  text-align: center;
+}
+
+.file-upload-demo__placeholder {
+  margin: 0;
+  color: var(--color-muted);
+  @include px(font-size, 14);
+}
+

@@ -6,9 +6,14 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.11.0",
+    "swiper": "^11.1.9",
     "web-vitals": "^2.1.4",
-    "sass": "^1.80.0",
-    "swiper": "^11.1.9"
+    "react-day-picker": "^9.4.4",
+    "date-fns": "^4.1.0",
+    "react-draggable": "^4.4.6",
+    "highlight.js": "^11.11.0",
+    "html2canvas": "^1.4.1",
+    "lottie-react": "^2.4.1"
   },
   "scripts": {
     "dev": "vite",
@@ -33,9 +38,10 @@
     "@types/node": "^18.15.0",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^4.0.0",
+    "@vitejs/plugin-react": "^4.7.0",
     "prop-types": "^15.8.1",
+    "sass": "^1.97.2",
     "typescript": "^4.9.5",
-    "vite": "^5.0.0"
+    "vite": "^6.4.1"
   }
 }

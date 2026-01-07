@@ -1,0 +1,141 @@
+@use "../../assets/scss/index.scss" as *;
+.textarea-field {
+  display: flex;
+  flex-direction: column;
+  gap: px(8);
+  width: 100%;
+
+  &__label {
+    @include px(font-size, 14);
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.4;
+  }
+
+  &__wrapper {
+    position: relative;
+    border: px(1) solid var(--color-border);
+    border-radius: px(10);
+    background: var(--color-bg);
+    transition: all 0.2s ease;
+
+    &:focus-within {
+      border: none;
+      box-shadow: none;
+    }
+
+    &--error {
+      border-color: var(--color-error) !important;
+
+      &:focus-within {
+        border: none !important;
+        box-shadow: none !important;
+      }
+    }
+
+    &--byte-limit {
+      border-color: var(--color-error) !important;
+
+      &:focus-within {
+        border: none !important;
+        box-shadow: none !important;
+      }
+    }
+  }
+
+  // Size variants
+  &--small {
+    .textarea-field__wrapper {
+      padding: px(8) px(12);
+      padding-bottom: px(36);
+    }
+
+    .textarea-field__textarea {
+      @include px(font-size, 13);
+    }
+
+    .textarea-field__byte-counter {
+      bottom: px(8);
+      left: px(12);
+    }
+  }
+
+  &--medium {
+    .textarea-field__wrapper {
+      padding: px(12) px(16);
+      padding-bottom: px(40);
+    }
+
+    .textarea-field__textarea {
+      @include px(font-size, 14);
+    }
+
+    .textarea-field__byte-counter {
+      bottom: px(12);
+      left: px(16);
+    }
+  }
+
+  &--large {
+    .textarea-field__wrapper {
+      padding: px(16) px(20);
+      padding-bottom: px(44);
+    }
+
+    .textarea-field__textarea {
+      @include px(font-size, 16);
+    }
+
+    .textarea-field__byte-counter {
+      bottom: px(16);
+      left: px(20);
+    }
+  }
+
+  &__textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: var(--color-text);
+    outline: none;
+    resize: vertical;
+    min-height: px(100);
+    font-family: inherit;
+    line-height: 1.6;
+
+    &::placeholder {
+      color: var(--color-muted);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  &__help {
+    @include px(font-size, 12);
+    line-height: 1.4;
+    color: var(--color-muted);
+    margin: 0;
+
+    &--error {
+      color: var(--color-error);
+    }
+  }
+
+  &__byte-counter {
+    position: absolute;
+    bottom: px(12);
+    left: px(16);
+    @include px(font-size, 12);
+    color: var(--color-muted);
+    line-height: 1.4;
+
+    &--exceeded {
+      color: var(--color-error);
+      font-weight: 600;
+    }
+  }
+}
+
