@@ -16,6 +16,7 @@ export type HeaderBottomSheetOptionMeta = {
 export type HeaderMainProps = {
   notificationCount?: number;
   notificationTarget?: string; // ✅ routeMeta에서 관리
+  sticky?: boolean;
 };
 
 /** ✅ Sub Header 전용 props */
@@ -23,6 +24,7 @@ export type HeaderSubProps = {
   categoryName?: string;
   showUtilities?: boolean;
   showMoreButton?: boolean;
+  sticky?: boolean;
 };
 
 

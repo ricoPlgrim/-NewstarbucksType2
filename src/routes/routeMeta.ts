@@ -23,7 +23,9 @@ export const routeMetaMap: RouteMetaItem[] = [
       headerProps: {
         notificationCount: 3,
         notificationTarget: "/green-apron/notification",
+        sticky: true,
       },
+    
       headerBottomSheetOptions: [
         { label: "메뉴A", target: "/menu-a" },
         { label: "메뉴B", target: "/menu-b" },
