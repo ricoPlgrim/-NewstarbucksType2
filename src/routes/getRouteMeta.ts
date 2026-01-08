@@ -16,7 +16,7 @@ function normalizeMeta(meta: RouteMeta): RouteMeta {
       headerProps: {
         ...(meta.headerProps ?? {}),
       },
-      headerBottomSheetOptions: meta.headerBottomSheetOptions,
+      headerTopSheetOptions: meta.headerTopSheetOptions,
     };
   }
 
@@ -27,7 +27,7 @@ function normalizeMeta(meta: RouteMeta): RouteMeta {
       headerProps: {
         ...(meta.headerProps ?? {}),
       },
-      headerBottomSheetOptions: meta.headerBottomSheetOptions,
+      headerTopSheetOptions: meta.headerTopSheetOptions,
     };
   }
 

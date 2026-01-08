@@ -1,104 +1,139 @@
 @use "../../assets/scss/index.scss" as *;
-.accordion {
+/* ====== Card wrapper ====== */
+.accordion--category {
   width: 100%;
+}
+
+.accordion__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
   background: var(--color-card);
-  border-radius: px(12);
+  border: px(1) solid var(--color-border);
+  border-radius: px(16);
   overflow: hidden;
-  box-shadow: var(--shadow-soft);
+}
 
-  &__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: px(8);
-    padding: px(12);
+/* ====== Item / divider ====== */
+.accordion__item {
+  position: relative;
+}
+
+.accordion__divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 0 16px;
+}
+
+/* ====== Header ====== */
+.accordion__header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 16px;
+  background: var(--color-card);
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 px(3) rgba(59, 130, 246, 0.35);
+  }
+}
+
+.accordion__header-left {
+  display: inline-flex;
+  align-items: center;
+  gap: px(10);
+}
+
+.accordion__category-icon {
+  width: px(28);
+  height: px(28);
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-accent);
+  background: var(--color-accent-bg);
+  border: px(1) solid var(--color-accent-border);
+}
+
+.accordion__label {
+  font-size: px(15);
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+/* 우측 +/- */
+.accordion__toggle {
+  width: px(24);
+  text-align: center;
+  font-size: px(22);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-text);
+}
+
+/* ====== Content animation ====== */
+.accordion__content-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 240ms ease;
+}
+
+.accordion__content {
+  padding: px(12, 16, 16);
+}
+
+/* ====== (옵션) 캡처처럼 칩 필터 스타일 ====== */
+.accordion-filter-group {
+  & + & {
+    margin-top: px(14);
+  }
+}
+
+.accordion-filter-title {
+  font-size: px(13);
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: px(10);
+}
+
+.accordion-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: px(8);
+}
+
+.accordion-chip {
+  border: px(1) solid var(--color-border);
+  background: var(--color-card);
+  color: var(--color-text);
+
+  border-radius: 999px;
+  padding: px(8, 12);
+
+  font-size: px(13);
+  font-weight: 700;
+
+  cursor: pointer;
+
+  &.is-active {
+    background: var(--color-text);
+    color: var(--color-white);
+    border-color: var(--color-text);
   }
 
-  &__item {
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--color-bg);
-    border: px(1) solid var(--color-border);
-    border-radius: px(10);
-    transition: all 0.2s ease-in-out;
-    overflow: hidden;
-
-    &:hover:not(.accordion__item--open) {
-      background-color: rgba(0, 0, 0, 0.02);
-      border-color: var(--color-accent);
-    }
-
-    &--open {
-      border-color: var(--color-accent);
-      background-color: rgba(12, 124, 89, 0.04);
-      box-shadow: 0 px(2) px(8) rgba(12, 124, 89, 0.12);
-
-      .accordion__label {
-        color: var(--color-accent);
-        font-weight: 700;
-      }
-
-      .accordion__icon {
-        transform: rotate(180deg);
-        color: var(--color-accent);
-      }
-    }
-  }
-
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: px(16) px(14);
-    gap: px(12);
-  }
-
-  &__label {
-    font-weight: 600;
-    color: var(--color-text);
-    @include px(font-size, 15);
-    line-height: 1.4;
-    transition: color 0.2s ease;
-  }
-
-  &__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: px(20);
-    height: px(20);
-    color: var(--color-muted);
-    transition: transform 0.2s ease-in-out, color 0.2s ease;
-  }
-
-  &__content-wrapper {
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.3s ease-in-out;
-  }
-
-  &__content {
-    padding: 0 px(14) px(16) px(14);
-    color: var(--color-text);
-    @include px(font-size, 14);
-    line-height: 1.6;
-    cursor: auto;
-
-    p {
-      margin: 0;
-    }
-
-    * {
-      margin-top: 0;
-    }
-
-    *:last-child {
-      margin-bottom: 0;
-    }
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 px(3) rgba(59, 130, 246, 0.35);
   }
 }
 

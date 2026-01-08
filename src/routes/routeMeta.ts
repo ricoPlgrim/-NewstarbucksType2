@@ -1,17 +1,9 @@
 // src/routes/routeMeta.ts
 import type { RouteMeta } from "../types/layout";
 
-export type HeaderBottomSheetOptionMeta = {
-  icon?: string;
-  label: string;
-  target?: string;
-};
-
 export type RouteMetaItem = {
   pattern: string;
-  meta: RouteMeta & {
-    headerBottomSheetOptions?: HeaderBottomSheetOptionMeta[];
-  };
+  meta: RouteMeta;
 };
 
 export const routeMetaMap: RouteMetaItem[] = [
@@ -31,9 +23,9 @@ export const routeMetaMap: RouteMetaItem[] = [
         notificationTarget: "/green-apron/notification",
         sticky: true,
       },
-      headerBottomSheetOptions: [
-        { label: "메뉴A", target: "/menu-a" },
-        { label: "메뉴B", target: "/menu-b" },
+      headerTopSheetOptions: [
+        { label: "메뉴A", icon: "🔒", target: "/menu-a" },
+        { label: "메뉴B", icon: "🔒", target: "/menu-b" },
       ],
     },
   },

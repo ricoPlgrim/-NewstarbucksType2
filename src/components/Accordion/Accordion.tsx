@@ -1,127 +1,135 @@
 import { useState, useRef, useEffect } from "react";
 import "./Accordion.scss";
+import type { ReactNode } from "react";
 
-/**
- * Accordion 컴포넌트
- * @param {Array} items - 아코디언 아이템 배열 [{ id, label, content }]
- *  - content는 ReactNode로 자유롭게 넣을 수 있음 (문자열/JSX/컴포넌트 등)
- * @param {string} type - 'exclusive' (하나만 열림) 또는 'independent' (독립적으로 열림)
- * @param {boolean} defaultOpenFirst - 첫 번째 아이템 기본 열림 여부
- * @param {string} className - 추가 클래스명
- * 
- */
+type AccordionType = "exclusive" | "independent";
+
+type AccordionItem = {
+  id: string | number;
+  label: ReactNode;
+  content: ReactNode;
+  icon?: ReactNode;
+};
+
+type AccordionProps = {
+  items?: AccordionItem[];
+  type?: AccordionType;
+  defaultOpenFirst?: boolean;
+  className?: string;
+};
+
 const Accordion = ({
   items = [],
-  type = "exclusive", // 'exclusive' | 'independent'
+  type = "exclusive",
   defaultOpenFirst = false,
   className = "",
-}) => {
-  const [openItems, setOpenItems] = useState(() => {
-    if (defaultOpenFirst && items.length > 0) {
-      // 첫 번째 아이템을 기본으로 열기
-      return [items[0].id];
+}: AccordionProps) => {
+  const [openItems, setOpenItems] = useState<string[]>(() => {
+    if (type === "exclusive" && defaultOpenFirst && items.length > 0) {
+      return [String(items[0].id)];
     }
     return [];
   });
 
-  // 각 아코디언 아이템의 콘텐츠 영역 DOM 참조 (높이 애니메이션용)
-  const contentRefs = useRef({});
+  const contentRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  /**
-   * 아코디언 아이템 클릭 이벤트 핸들러
-   * 헤더 영역 클릭 시 호출됨
-   * @param {string|number} itemId - 클릭된 아이템의 ID
-   */
-  const handleItemClick = (itemId) => {
+  // ✅ items가 바뀌었는데 openItems에 없는 id만 남아있으면 초기화 (안전)
+  useEffect(() => {
+    if (!items.length) {
+      setOpenItems([]);
+      return;
+    }
+
+    const validKeys = new Set(items.map((it) => String(it.id)));
+    setOpenItems((prev) => prev.filter((k) => validKeys.has(k)));
+
+    // defaultOpenFirst 처리(Exclusive에서만)
+    if (type === "exclusive" && defaultOpenFirst) {
+      const firstKey = String(items[0].id);
+      setOpenItems((prev) => (prev.length ? prev : [firstKey]));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, type, defaultOpenFirst]);
+
+  const handleItemClick = (itemId: string | number) => {
+    const key = String(itemId);
+
     if (type === "exclusive") {
-      // Exclusive 타입: 하나만 열림 (토글 방식)
-      setOpenItems((prev) => (prev.includes(itemId) ? [] : [itemId]));
+      setOpenItems((prev) => (prev.includes(key) ? [] : [key]));
     } else {
-      // Independent 타입: 독립적으로 열고 닫음 (여러 개 동시에 열 수 있음)
-      setOpenItems((prev) => {
-        if (prev.includes(itemId)) {
-          return prev.filter((id) => id !== itemId);
-        }
-        return [...prev, itemId];
-      });
+      setOpenItems((prev) =>
+        prev.includes(key) ? prev.filter((id) => id !== key) : [...prev, key]
+      );
     }
   };
 
-  /**
-   * 아코디언 콘텐츠 영역의 max-height 설정 (애니메이션용)
-   * openItems나 items가 변경될 때마다 실행됨
-   */
+  // ✅ max-height 애니메이션
   useEffect(() => {
     items.forEach((item) => {
-      const ref = contentRefs.current[item.id];
+      const key = String(item.id);
+      const ref = contentRefs.current[key];
       if (!ref) return;
 
-      if (openItems.includes(item.id)) {
-        // 열려있으면 실제 콘텐츠 높이만큼 max-height 설정
-        ref.style.maxHeight = ref.scrollHeight + "px";
-      } else {
-        // 닫혀있으면 max-height를 0으로 설정
-        ref.style.maxHeight = "0";
-      }
+      ref.style.maxHeight = openItems.includes(key) ? `${ref.scrollHeight}px` : "0";
     });
   }, [openItems, items]);
 
-  /**
-   * 콘텐츠 영역 클릭 이벤트 핸들러
-   * 콘텐츠 클릭 시 아코디언이 닫히지 않도록 이벤트 전파 방지
-   * @param {Event} e - 클릭 이벤트 객체
-   */
-  const handleContentClick = (e) => {
+  const handleContentClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
+  if (!items.length) return null;
+
   return (
-    <div className={`accordion ${className}`}>
+    <div className={`accordion accordion--category ${className}`}>
       <ul className="accordion__list">
-        {items.map((item) => {
-          const isOpen = openItems.includes(item.id);
+        {items.map((item, index) => {
+          const key = String(item.id);
+          const isOpen = openItems.includes(key);
 
           return (
             <li
-              key={item.id}
-              className={`accordion__item ${
-                isOpen ? "accordion__item--open" : ""
-              }`}
+              key={key}
+              className={`accordion__item ${isOpen ? "accordion__item--open" : ""}`}
             >
-              <div
+              {/* ✅ 캡처 디자인 헤더 */}
+              <button
+                type="button"
                 className="accordion__header"
+                aria-expanded={isOpen}
+                aria-controls={`accordion-content-${key}`}
                 onClick={() => handleItemClick(item.id)}
               >
-                <span className="accordion__label">{item.label}</span>
+                <span className="accordion__header-left">
+                  <span className="accordion__category-icon" aria-hidden="true">
+                    {item.icon ?? <DefaultCategoryIcon />}
+                  </span>
 
-                <div className="accordion__icon">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M3 5.90446L3.8875 5L8 9.19108L12.1125 5L13 5.90446L8 11L3 5.90446Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </div>
-              </div>
+                  <span className="accordion__label">{item.label}</span>
+                </span>
+
+                <span className="accordion__toggle" aria-hidden="true">
+                  {isOpen ? "−" : "+"}
+                </span>
+              </button>
 
               <div
+                id={`accordion-content-${key}`}
                 ref={(el) => {
-                  contentRefs.current[item.id] = el;
+                  contentRefs.current[key] = el;
                 }}
                 className="accordion__content-wrapper"
+                role="region"
+                aria-hidden={!isOpen}
                 onClick={handleContentClick}
               >
-                <div className="accordion__content">
-                  {/* ✅ content를 ReactNode로 "그대로" 렌더 */}
-                  {item.content}
-                </div>
+                <div className="accordion__content">{item.content}</div>
               </div>
+
+              {/* ✅ 캡처처럼 구분선 */}
+              {index !== items.length - 1 && (
+                <div className="accordion__divider" aria-hidden="true" />
+              )}
             </li>
           );
         })}
@@ -131,3 +139,28 @@ const Accordion = ({
 };
 
 export default Accordion;
+
+function DefaultCategoryIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M7 10V8a5 5 0 1 1 10 0v2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M6 10h12l-1 10H7L6 10Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10 14v2M14 14v2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}

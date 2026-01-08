@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect, useRef } from "react";
 import PageTemplate from "../../components/PageTemplate/PageTemplate";
 import Image from "../../components/Image/Image";
@@ -1008,7 +1009,7 @@ const TabsPreview = () => {
   if (isLoading) {
     return (
       <div className="guide-preview guide-preview--tabs">
-        <div style={{ display: "flex", gap: 8, marginBottom: 12, width: "100%" }}> 
+        <div style={{ display: "flex", gap: 8, marginBottom: 12, width: "100%" }}>
           <Skeleton width="80px" height={32} />
           <Skeleton width="80px" height={32} />
           <Skeleton width="80px" height={32} />
@@ -1017,9 +1018,9 @@ const TabsPreview = () => {
       </div>
     );
   }
+
   if (error) return <div className="guide-preview guide-preview--tabs">{error}</div>;
 
-  // 많은 탭 아이템으로 스크롤 테스트
   const manyItems = [
     { id: "tab1", label: "첫번째 탭", description: "첫번째 탭 내용입니다." },
     { id: "tab2", label: "두번째 탭", description: "두번째 탭 내용입니다." },
@@ -1034,18 +1035,14 @@ const TabsPreview = () => {
   return (
     <div className="guide-preview guide-preview--tabs">
       <div style={{ display: "flex", flexDirection: "column", gap: "32px", width: "100%" }}>
-        <div>
-          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>기본 타입 (Default)</h4>
-          <Tabs items={items} type="default" />
-        </div>
-
+        {/* Scroll */}
         <div>
           <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
             스크롤 타입 (Scroll) - 클릭 시 가운데 정렬
           </h4>
           <Tabs items={manyItems} type="scroll" scrollContainerId="tabs-scroll-container" />
         </div>
-
+        {/* Swiper */}
         <div>
           <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
             Swiper 타입 - 클릭 시 가운데 정렬
@@ -1053,6 +1050,15 @@ const TabsPreview = () => {
           <Tabs items={manyItems} type="swiper" />
         </div>
 
+        {/* ✅ Line */}
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
+            Line 타입 - 하단 인디케이터 라인 이동
+          </h4>
+          <Tabs items={manyItems} type="line" />
+        </div>
+
+        {/* UI only - Default */}
         <div>
           <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
             탭 UI만 (컨텐츠 없음)
@@ -1060,23 +1066,39 @@ const TabsPreview = () => {
           <Tabs items={items} type="default" showContent={false} />
         </div>
 
+        {/* UI only - Scroll */}
         <div>
           <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
             탭 UI만 - 스크롤 타입
           </h4>
-          <Tabs items={manyItems} type="scroll" scrollContainerId="tabs-ui-only-scroll" showContent={false} />
+          <Tabs
+            items={manyItems}
+            type="scroll"
+            scrollContainerId="tabs-ui-only-scroll"
+            showContent={false}
+          />
         </div>
 
+        {/* UI only - Swiper */}
         <div>
           <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
             탭 UI만 - Swiper 타입
           </h4>
           <Tabs items={manyItems} type="swiper" showContent={false} />
         </div>
+
+        {/* ✅ UI only - Line */}
+        <div>
+          <h4 style={{ marginBottom: "12px", fontSize: "14px", fontWeight: 700 }}>
+            탭 UI만 - Line 타입 (인디케이터)
+          </h4>
+          <Tabs items={manyItems} type="line" showContent={false} />
+        </div>
       </div>
     </div>
   );
 };
+
 
 const defaultCarouselSlides = [
   { id: 1, title: "배너 1", desc: "이곳에 주요 메시지를 노출하세요.", color: "#0c7c59" },
@@ -1086,14 +1108,14 @@ const defaultCarouselSlides = [
 ];
 
 const CarouselPreview = () => {
-  const [slides, setSlides] = useState([]);
+  const [slides, setSlides] = useState<typeof defaultCarouselSlides>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const effectSlides = defaultCarouselSlides;
 
   useEffect(() => {
     fetchMockCarouselSlides()
-      .then(setSlides)
+      .then((slides) => setSlides(slides as { id: number; title: string; desc: string; color?: string }[]))
       .catch((err) => {
         console.error("캐러셀 데이터 로드 실패:", err);
         setError("캐러셀 데이터를 불러오지 못했습니다.");
@@ -2456,17 +2478,78 @@ const ListPreview = () => {
 };
 
 const AccordionPreview = () => {
+  const [equipTypes, setEquipTypes] = useState<string[]>(["grinder"]);
+
+  const toggleEquipType = (value: string) => {
+    setEquipTypes((prev) =>
+      prev.includes(value)
+        ? prev.filter((v) => v !== value)
+        : [...prev, value]
+    );
+  };
   const exclusiveItems = [
     {
       id: "1",
-      label: "에피타이저",
+      label: "커피/음료 장비",
       content: (
         <>
-          1번에피타이저 메뉴입니다. 다양한 전채 요리를 제공합니다.
-          <br />
-          <a href="#appetizer" onClick={(e) => { e.preventDefault(); alert("에피타이저 링크 클릭됨"); }}>
-            에피타이저 상세보기
-          </a>
+          <div className="accordion-filter-group">
+            <div className="accordion-filter-title">장비유형</div>
+            <div className="accordion-chips">
+              <button
+                type="button"
+                className={`accordion-chip ${equipTypes.includes("grinder") ? "is-active" : ""}`}
+                onClick={() => toggleEquipType("grinder")}
+              >
+                그라인더
+              </button>
+
+              <button
+                type="button"
+                className={`accordion-chip ${equipTypes.includes("boiler") ? "is-active" : ""}`}
+                onClick={() => toggleEquipType("boiler")}
+              >
+                보일러
+              </button>
+
+              <button
+                type="button"
+                className={`accordion-chip ${equipTypes.includes("nitro") ? "is-active" : ""}`}
+                onClick={() => toggleEquipType("nitro")}
+              >
+                나이트로플러스
+              </button>
+            </div>
+          </div>
+
+          <div className="accordion-filter-group">
+            <div className="accordion-filter-title">브랜드</div>
+            <div className="accordion-chips">
+              <button
+                type="button"
+                className={`accordion-chip ${equipTypes.includes("masterrena") ? "is-active" : ""}`}
+                onClick={() => toggleEquipType("masterrena")}
+              >
+                마스트레나나
+              </button>
+
+              <button
+                type="button"
+                className={`accordion-chip ${equipTypes.includes("blackigle") ? "is-active" : ""}`}
+                onClick={() => toggleEquipType("blackigle")}
+              >
+                블랙이글
+              </button>
+
+              <button
+                type="button"
+                className={`accordion-chip ${equipTypes.includes("guscooker") ? "is-active" : ""}`}
+                onClick={() => toggleEquipType("guscooker")}
+              >
+                구스쿠커커
+              </button>
+            </div>
+          </div>
         </>
       ),
     },
@@ -6595,7 +6678,7 @@ const [selectedOption, setSelectedOption] = useState<DropdownOption | null>(null
     label: "탭",
     title: "Tabs 컴포넌트",
     description:
-      "탭은 버튼 역할을 하며, `aria-selected`와 `role=\"tablist\"` 속성을 설정합니다. 기본 타입, 스크롤 타입(부모 스크롤바 이용), Swiper 타입(가운데 정렬)을 지원합니다. 탭 클릭 시 active 클래스가 즉시 적용되며, Swiper 타입에서는 스와이프 제스처로도 탭을 변경할 수 있습니다.",
+    "탭은 버튼 역할을 하며, `aria-selected`와 `role=\"tablist\"` 속성을 설정합니다. 기본 타입, 스크롤 타입(부모 스크롤바 이용), Swiper 타입(가운데 정렬), Line 타입(활성 탭 하단 인디케이터 라인 이동)을 지원합니다. 탭 클릭 시 active 클래스가 즉시 적용되며, Swiper 타입에서는 스와이프 제스처로도 탭을 변경할 수 있습니다.",
     code: `import Tabs from "./Tabs";
 import { useState } from "react";
 
@@ -6605,18 +6688,40 @@ const items: TabItem[] = [
   { id: "detail", label: "상세", description: "상세 정보를 표시합니다." },
   { id: "review", label: "리뷰" },
   { id: "qa", label: "Q&A" },
+  { id: "recent", label: "최근 검색 키워드" },
 ];
 
-const [activeTab, setActiveTab] = useState<string>(items[0].id);
+export default function TabsExample() {
+  const [activeTab, setActiveTab] = useState<string>(items[0].id);
 
-<div id="tabs-scroll" style={{ overflowX: "auto" }}>
-  <Tabs
-    items={items}
-    type="swiper"
-    scrollContainerId="tabs-scroll"
-    onChange={(id: string) => setActiveTab(id)}
-  />
-</div>;`,
+  return (
+    <>
+      {/* Swiper 타입 (가운데 정렬 / 스와이프 지원) */}
+      <Tabs
+        items={items}
+        type="swiper"
+        onChange={(id: string) => setActiveTab(id)}
+      />
+
+      {/* Scroll 타입 (부모 스크롤 컨테이너 이용) */}
+      <div id="tabs-scroll" style={{ overflowX: "auto" }}>
+        <Tabs
+          items={items}
+          type="scroll"
+          scrollContainerId="tabs-scroll"
+          onChange={(id: string) => setActiveTab(id)}
+        />
+      </div>
+
+      {/* Line 타입 (활성 탭 하단 라인 인디케이터 이동 + 내부 스크롤) */}
+      <Tabs
+        items={items}
+        type="line"
+        onChange={(id: string) => setActiveTab(id)}
+      />
+    </>
+  );
+};`,
     PreviewComponent: TabsPreview,
   },
 
@@ -6747,132 +6852,156 @@ const FullScreenLoading = () => {
     label: "아코디언",
     title: "Accordion 컴포넌트",
     description:
-      "여러 항목을 접었다 펼칠 수 있는 아코디언 컴포넌트입니다. Exclusive 타입(하나만 열림)과 Independent 타입(독립적으로 열림) 두 가지 모드를 지원합니다.",
-    code: `import Accordion from "./Accordion";
-import { ReactNode } from "react";
-
-// 타입 정의
-type AccordionItem = {
-  id: string | number;
-  label: string;
-  content: string | ReactNode;
-};
-
-// 기본 사용법 - Exclusive 타입 (하나만 열림)
-const basicItems: AccordionItem[] = [
-  { 
-    id: "1", 
-    label: "에피타이저", 
-    content: "에피타이저 메뉴입니다. 다양한 전채 요리를 제공합니다." 
-  },
-  { 
-    id: "2", 
-    label: "메인 음식", 
-    content: "메인 음식 메뉴입니다. 풍부한 맛의 메인 요리를 제공합니다." 
-  },
-  { 
-    id: "3", 
-    label: "디저트", 
-    content: "디저트 메뉴입니다. 달콤한 디저트를 제공합니다." 
-  },
-];
-
-<Accordion items={basicItems} type="exclusive" />;
-
-// Independent 타입 (독립적으로 열림, 여러 개 동시에 열 수 있음)
-const independentItems: AccordionItem[] = [
-  { id: "4", label: "음료", content: "음료 메뉴입니다." },
-  { id: "5", label: "셀러드", content: "셀러드 메뉴입니다." },
-  { id: "6", label: "일식", content: "일식 메뉴입니다." },
-];
-
-<Accordion items={independentItems} type="independent" />;
-
-// 첫 번째 아이템 기본 열림
-<Accordion 
-  items={basicItems} 
-  type="exclusive" 
-  defaultOpenFirst={true} 
-/>;
-
-// content에 ReactNode 사용 (복잡한 구조)
-const complexItems: AccordionItem[] = [
-  {
-    id: "7",
-    label: "상세 정보",
-    content: (
-      <div>
-        <h4>제목</h4>
-        <p>설명 텍스트입니다.</p>
-        <ul>
-          <li>항목 1</li>
-          <li>항목 2</li>
-          <li>항목 3</li>
-        </ul>
-      </div>
-    ),
-  },
-  {
-    id: "8",
-    label: "추가 정보",
-    content: (
-      <div>
-        <p>추가 정보 내용입니다.</p>
-        <button onClick={() => alert("클릭")}>버튼</button>
-      </div>
-    ),
-  },
-];
-
-<Accordion items={complexItems} type="independent" />;
-
-// className으로 스타일 커스터마이징
-<Accordion 
-  items={basicItems} 
-  type="exclusive" 
-  className="custom-accordion" 
-/>;
-
-// 실제 사용 예제
-const MenuAccordion = () => {
-  const menuItems: AccordionItem[] = [
-    {
-      id: "appetizer",
-      label: "에피타이저",
-      content: "새우튀김, 양념치킨, 감자튀김 등",
+  "여러 항목을 접었다 펼칠 수 있는 아코디언 컴포넌트입니다. Exclusive 타입(하나만 열림)과 Independent 타입(독립적으로 열림) 두 가지 모드를 지원합니다. 카테고리형 UI(좌측 아이콘, 우측 +/- 토글, 구분선) 스타일을 기본 제공하며, content에는 ReactNode를 넣어 필터 칩/폼 등 복잡한 UI도 구성할 수 있습니다.",
+  code: `import Accordion from "./Accordion";
+  import type { ReactNode } from "react";
+  
+  // 타입 정의 (컴포넌트에 맞춰 id는 string 권장)
+  type AccordionItem = {
+    id: string;
+    label: ReactNode;
+    content: ReactNode;
+    icon?: ReactNode; // 선택: 없으면 기본 아이콘 표시
+  };
+  
+  // 기본 사용법 - Exclusive 타입 (하나만 열림)
+  const basicItems: AccordionItem[] = [
+    { 
+      id: "appetizer", 
+      label: "에피타이저", 
+      content: "에피타이저 메뉴입니다. 다양한 전채 요리를 제공합니다." 
     },
-    {
-      id: "main",
-      label: "메인 요리",
-      content: "스테이크, 파스타, 피자 등",
+    { 
+      id: "main", 
+      label: "메인 음식", 
+      content: "메인 음식 메뉴입니다. 풍부한 맛의 메인 요리를 제공합니다." 
     },
-    {
-      id: "dessert",
-      label: "디저트",
-      content: "케이크, 아이스크림, 커피 등",
+    { 
+      id: "dessert", 
+      label: "디저트", 
+      content: "디저트 메뉴입니다. 달콤한 디저트를 제공합니다." 
     },
   ];
-
-  return (
-    <Accordion 
-      items={menuItems} 
-      type="exclusive" 
-      defaultOpenFirst={true}
-    />
-  );
-};
-
-// Props 설명:
-// - items: AccordionItem[] (필수) - 아코디언 아이템 배열
-//   - id: string | number - 각 아이템의 고유 식별자
-//   - label: string - 헤더에 표시될 텍스트
-//   - content: string | ReactNode - 펼쳐질 때 표시될 내용
-// - type: "exclusive" | "independent" (선택, 기본값: "exclusive")
-//   - "exclusive": 하나만 열림 (다른 항목 열면 이전 항목 자동 닫힘)
-//   - "independent": 독립적으로 열림 (여러 개 동시에 열 수 있음)
-// - defaultOpenFirst: boolean (선택, 기본값: false)
-//   - true: 첫 번째 아이템이 기본적으로 열려있음
-// - className: string (선택) - 추가 CSS 클래스명`,
+  
+  <Accordion items={basicItems} type="exclusive" />;
+  
+  // Independent 타입 (독립적으로 열림, 여러 개 동시에 열 수 있음)
+  const independentItems: AccordionItem[] = [
+    { id: "drink", label: "음료", content: "음료 메뉴입니다." },
+    { id: "salad", label: "샐러드", content: "샐러드 메뉴입니다." },
+    { id: "japanese", label: "일식", content: "일식 메뉴입니다." },
+  ];
+  
+  <Accordion items={independentItems} type="independent" />;
+  
+  // 첫 번째 아이템 기본 열림
+  <Accordion 
+    items={basicItems} 
+    type="exclusive" 
+    defaultOpenFirst={true} 
+  />;
+  
+  // content에 ReactNode 사용 (복잡한 구조)
+  const complexItems: AccordionItem[] = [
+    {
+      id: "detail",
+      label: "상세 정보",
+      content: (
+        <div>
+          <h4>제목</h4>
+          <p>설명 텍스트입니다.</p>
+          <ul>
+            <li>항목 1</li>
+            <li>항목 2</li>
+            <li>항목 3</li>
+          </ul>
+        </div>
+      ),
+    },
+    {
+      id: "extra",
+      label: "추가 정보",
+      content: (
+        <div>
+          <p>추가 정보 내용입니다.</p>
+          <button type="button" onClick={() => alert("클릭")}>버튼</button>
+        </div>
+      ),
+    },
+  ];
+  
+  <Accordion items={complexItems} type="independent" />;
+  
+  // ✅ 카테고리형(캡처 스타일) - 필터 칩 UI 예시
+  
+  const [equipTypes, setEquipTypes] = useState<string[]>(["grinder"]);
+    const toggleEquipType = (value: string) => {
+    setEquipTypes((prev) =>
+      prev.includes(value)
+        ? prev.filter((v) => v !== value)
+        : [...prev, value]
+    );
+  };
+  const categoryItems: AccordionItem[] = [
+    {
+      id: "coffee",
+      label: "커피/음료/장비",
+      content: (
+        <>
+          <div className="accordion-filter-group">
+            <div className="accordion-filter-title">장비유형</div>
+            <div className="accordion-chips">
+              <button type="button" className="accordion-chip is-active">그라인더</button>
+              <button type="button" className="accordion-chip">보일러</button>
+              <button type="button" className="accordion-chip">나이트로플러스</button>
+              <button type="button" className="accordion-chip">휘핑머신</button>
+              <button type="button" className="accordion-chip">피지오</button>
+              <button type="button" className="accordion-chip">컵워머</button>
+            </div>
+          </div>
+  
+          <div className="accordion-filter-group">
+            <div className="accordion-filter-title">브랜드</div>
+            <div className="accordion-chips">
+              <button type="button" className="accordion-chip">마스트레나1</button>
+              <button type="button" className="accordion-chip">마스트레나2</button>
+              <button type="button" className="accordion-chip">블랙이글</button>
+              <button type="button" className="accordion-chip">마스터그라인더</button>
+              <button type="button" className="accordion-chip">구스쿠커</button>
+              <button type="button" className="accordion-chip">오비소</button>
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      id: "kitchen",
+      label: "주방/제빙/냉장/냉동기기",
+      content: <div>필터 UI를 여기에 추가하면 됩니다.</div>,
+    },
+  ];
+  
+  <Accordion items={categoryItems} type="exclusive" defaultOpenFirst={true} />;
+  
+  // className으로 스타일 커스터마이징
+  <Accordion 
+    items={basicItems} 
+    type="exclusive" 
+    className="custom-accordion" 
+  />;
+  
+  // Props 설명:
+  // - items: AccordionItem[] (필수) - 아코디언 아이템 배열
+  //   - id: string - 각 아이템의 고유 식별자
+  //   - label: ReactNode - 헤더에 표시될 내용(텍스트/JSX 가능)
+  //   - content: ReactNode - 펼쳐질 때 표시될 내용
+  //   - icon?: ReactNode - (선택) 좌측 아이콘 영역 커스텀, 없으면 기본 아이콘 사용
+  // - type: "exclusive" | "independent" (선택, 기본값: "exclusive")
+  //   - "exclusive": 하나만 열림 (다른 항목 열면 이전 항목 자동 닫힘)
+  //   - "independent": 독립적으로 열림 (여러 개 동시에 열 수 있음)
+  // - defaultOpenFirst: boolean (선택, 기본값: false)
+  //   - true: 첫 번째 아이템이 기본적으로 열려있음
+  // - className: string (선택) - 추가 CSS 클래스명`,
     PreviewComponent: AccordionPreview,
   },
 

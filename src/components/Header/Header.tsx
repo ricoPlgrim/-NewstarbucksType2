@@ -8,9 +8,9 @@ import {
 } from "react";
 import Typography from "../Typography/Typography";
 import Icon from "../Icon/Icon";
-import { BottomSheetPopup } from "../Popup/Popup";
+import { TopSheetPopup } from "../Popup/Popup";
 import "./Header.scss";
-import type { HeaderBottomSheetOptionMeta } from "../../types/layout";
+import type { HeaderTopSheetOptionMeta } from "../../types/layout";
 
 export type HeaderHandle = {
   toggleMenu: () => void;
@@ -58,12 +58,12 @@ type HeaderProps = {
   /** chevron 아이콘 표시 여부 (메인 헤더에서 사용, 기본값: true) */
   showChevron?: boolean;
 
-  /** 로고 클릭 시 표시할 바텀 팝업 옵션 (메인 헤더에서 사용) */
-  bottomSheetOptions?: HeaderBottomSheetOptionMeta[];
+  /** 로고 클릭 시 표시할 상단 팝업 옵션 (메인 헤더에서 사용) */
+  topSheetOptions?: HeaderTopSheetOptionMeta[];
   /** 바텀 팝업 열림/닫힘 상태 변경 시 호출되는 콜백 (메인 헤더에서 사용) */
-  onBottomSheetOpenChange?: (isOpen: boolean) => void;
+  onTopSheetOpenChange?: (isOpen: boolean) => void;
   /** 바텀 팝업에 적용할 커스텀 클래스명 (메인 헤더에서 사용, 기본값: "custom-bottom-sheet") */
-  bottomSheetClassName?: string;
+  TopSheetClassName?: string;
 };
 
 // ------------------------------------
@@ -83,7 +83,7 @@ type MenuNode = {
 };
 
 // ------------------------------------
-// ✅ Type Guards (핵심)
+// ✅ Type Guards 
 // ------------------------------------
 const hasChildren = (submenu: SubmenuItem): submenu is SubmenuWithChildren => {
   return "children" in submenu;
@@ -172,15 +172,15 @@ const Header = forwardRef<HeaderHandle, HeaderProps>(function Header(
     logoText = "스타벅스",
     titleText = "MOBILE OFFICE",
     showChevron = true,
-    bottomSheetOptions,
-    onBottomSheetOpenChange,
-    bottomSheetClassName = "custom-bottom-sheet",
+    topSheetOptions,
+    onTopSheetOpenChange,
+    TopSheetClassName = "custom-bottom-sheet",
   }: HeaderProps,
   ref
 ) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState<ExpandedMap>({});
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isTopSheetOpen, setIsTopSheetOpen] = useState(false);
 
   // 각 서브메뉴 DOM 참조 (2뎁스/3뎁스 아코디언)
   const submenuRefs = useRef<SubmenuRefs>({});
@@ -215,12 +215,12 @@ const Header = forwardRef<HeaderHandle, HeaderProps>(function Header(
    * 로고 클릭 동작
    */
   const triggerLogoAction = useCallback(() => {
-    if (bottomSheetOptions && bottomSheetOptions.length > 0) {
-      setIsBottomSheetOpen(true);
-      onBottomSheetOpenChange?.(true);
+    if (topSheetOptions && topSheetOptions.length > 0) {
+      setIsTopSheetOpen(true);
+      onTopSheetOpenChange?.(true);
     }
     onLogoClick?.();
-  }, [bottomSheetOptions, onBottomSheetOpenChange, onLogoClick]);
+  }, [topSheetOptions, onTopSheetOpenChange, onLogoClick]);
 
   useImperativeHandle(ref, () => ({ toggleMenu, triggerLogoAction }), [
     toggleMenu,
@@ -776,18 +776,15 @@ const Header = forwardRef<HeaderHandle, HeaderProps>(function Header(
 
       {isMenuOpen && <div className="header__overlay" onClick={closeMenu} aria-hidden="true" />}
 
-      {/* 바텀 팝업 */}
-      {bottomSheetOptions && bottomSheetOptions.length > 0 && (
-        <BottomSheetPopup
-          open={isBottomSheetOpen}
-          onClose={() => {
-            setIsBottomSheetOpen(false);
-            onBottomSheetOpenChange?.(false);
-          }}
-          className={bottomSheetClassName}
-          options={bottomSheetOptions}
+      {/* 탑 팝업 */}
+      {topSheetOptions?.length ? (
+        <TopSheetPopup
+          open={isTopSheetOpen}
+          onClose={() => { setIsTopSheetOpen(false); onTopSheetOpenChange?.(false); }}
+          className={TopSheetClassName}
+          items={topSheetOptions}
         />
-      )}
+      ) : null}
     </header>
   );
 });

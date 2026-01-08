@@ -2,6 +2,7 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header/Header";
 import { getRouteMeta } from "../routes/getRouteMeta";
+import type { HeaderTopSheetOption } from "../types/layout";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
@@ -9,12 +10,18 @@ export default function RootLayout() {
 
   const meta = getRouteMeta(pathname);
 
-  // ✅ bottomSheetOptions meta → 실제 options로 변환
-  const bottomSheetOptions =
-  meta.headerBottomSheetOptions?.map(({ target, ...rest }) => ({
-    ...rest,
-    onClick: target ? () => navigate(target) : undefined, // ✅ target이 있을 때만 navigate 실행
-  }));
+  // ✅meta(정적) -> option(동적) 변환
+  const topSheetOptions: HeaderTopSheetOption[] | undefined =
+  meta.headerTopSheetOptions?.map((o) => {
+    const target = o.target; // ✅ 여기서 string | undefined
+
+    return {
+      title: o.label,
+      icon: o.icon ? <span>{o.icon}</span> : undefined,
+      disabled: o.disabled,
+      onClick: target ? () => navigate(target) : undefined, // ✅ target은 여기서 string으로 확정
+    };
+  });
 
   // ✅ 헤더가 없는 페이지
   if (meta.headerType === "none") {
@@ -38,7 +45,7 @@ export default function RootLayout() {
 
     const headerProps = {
       ...mainProps,
-      ...(bottomSheetOptions ? { bottomSheetOptions } : {}),
+      ...(topSheetOptions ? { topSheetOptions } : {}),
       onNotificationClick,
     };
 
@@ -60,7 +67,7 @@ export default function RootLayout() {
 
   const headerProps = {
     ...subProps,
-    ...(bottomSheetOptions ? { bottomSheetOptions } : {}),
+    ...(topSheetOptions ? { topSheetOptions } : {}),
     onBack,
   };
 

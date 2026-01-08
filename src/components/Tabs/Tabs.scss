@@ -130,6 +130,65 @@
     }
   }
 
+  // Line  타입
+  &--line {
+    .tabs__scroll-container {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      position: relative;
+       /* Chrome, Safari */
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Firefox */
+      scrollbar-width: none;
+
+      /* IE, Edge (legacy) */
+      -ms-overflow-style: none;
+    }
+    .tabs__tablist {
+      position: relative;
+      display: flex;
+      gap: px(24); 
+      align-items: center;
+      padding: px(0, 16);
+      border-bottom: px(1) solid var(--color-border);
+    }
+
+    .tabs__button {
+      position: relative;
+      height: px(44);
+      padding: 0;
+      background-color: transparent !important; 
+      border: 0;
+      cursor: pointer;
+
+      font-weight: 400;
+      color: var(--color-text);
+
+      &.is-active {
+        color: var(--color-text);
+        font-weight: 700;
+      }
+    }
+
+    .tabs__indicator {
+      position: absolute;
+      left: 0;
+      bottom: -1px;   
+      height: px(2);
+      background: var(--color-accent);
+      border-radius: px(999);
+      opacity: 1;
+      transition: transform 220ms ease, width 220ms ease;
+      will-change: transform, width;
+      pointer-events: none;
+    }
+    .tabs__indicator[style*="width: 0px"] { opacity: 0; }
+  }
   // Default 타입
   &--default {
     .tabs__tablist {

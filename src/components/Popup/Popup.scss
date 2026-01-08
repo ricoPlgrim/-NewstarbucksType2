@@ -1,6 +1,6 @@
 @use "../../assets/scss/index.scss" as *;
 
-.popup-overlay { 
+.popup-overlay {
   position: fixed;
   inset: 0;
   background: var(--color-overlay);
@@ -14,10 +14,21 @@
     align-items: flex-end;
   }
 
+  /* ✅ TopSheet Overlay (추가) */
+  &--top {
+    align-items: flex-start;
+    justify-content: center;
+  }
+
   &--full {
     background: var(--color-overlay-dark);
   }
 
+  /* ✅ open=false인데 DOM 유지될 때 클릭 막기 용 (추가) */
+  &--hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 
 .popup {
@@ -56,23 +67,48 @@
     /* 구형 브라우저 fallback */
     max-height: calc(100vh - #{px(12)});
 
+    /* ✅ 드래그 제거했으니 is-dragging 무의미: 남겨도 되지만 커서/터치 비활성화 */
     &.is-dragging {
-      transition: none;     
+      transition: none;
     }
-    &.custom-bottom-sheet{
+
+    &.custom-bottom-sheet {
       box-shadow: none;
       border-radius: 0 !important;
       background: transparent;
-      .popup__handle{
+
+      .popup__handle {
         display: none;
       }
+
       .popup__body,
-      .popup__actions{
+      .popup__actions {
         background: var(--color-card);
         border-radius: px(18);
         padding: 0;
       }
     }
+  }
+
+  /* ✅ TopSheet Container (추가)
+     - 이미지처럼 상단에서 내려오는 메뉴형
+  */
+  &--top {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 0 0 px(24) px(24);
+    box-shadow: var(--shadow-overlay-dark);
+    overflow: visible;
+    transition: transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+
+    /* safe-area */
+    padding-top: env(safe-area-inset-top, 0px);
+
   }
 
   &--full {
@@ -86,7 +122,7 @@
     height: 100dvh;
     overflow: hidden;
   }
-  
+
   &__content {
     padding: 0 px(20) px(16) px(20);
     display: flex;
@@ -96,7 +132,7 @@
   &--sheet &__content {
     align-items: stretch;
   }
-  
+
   h4 {
     color: var(--color-text-dark);
   }
@@ -112,8 +148,16 @@
     background: var(--color-border);
     border-radius: px(4);
     margin: 0 auto px(12);
-    cursor: grab;
-    touch-action: none;
+
+    /* ✅ 드래그 제거: 커서/터치만 바꿔서 “그냥 표시용” */
+    cursor: default;
+    touch-action: auto;
+  }
+
+  /* ✅ 드래그 제거 버전 전용(추가) */
+  &__handle--static {
+    cursor: default;
+    touch-action: auto;
   }
 
   &__header {
@@ -155,7 +199,7 @@
     flex: 1 1 auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    min-height: 0; 
+    min-height: 0;
   }
 
   &__title {
@@ -280,7 +324,6 @@
       align-items: center;
       justify-content: center;
     }
-
   }
 
   &__nav-button {
@@ -325,7 +368,6 @@
     }
   }
 
-
   &__actions {
     margin-top: px(8);
     padding-top: px(8);
@@ -351,7 +393,7 @@
     padding-top: px(16);
     padding-bottom: calc(#{px(20)} + env(safe-area-inset-bottom, 0px));
     flex-shrink: 0;
-    
+
     &--stack {
       grid-template-columns: 1fr;
     }
@@ -386,8 +428,79 @@
       }
     }
   }
-}
 
+  /* ================================
+     ✅ TopSheet 메뉴 UI (추가)
+     ================================ */
+
+  &__top-menu {
+    display: flex;
+    flex-direction: column;
+    padding: px(18) px(16) px(14);
+  }
+
+ 
+  &__top-menu-item {
+    position: relative; // ✅ absolute 기준
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: px(16) px(10);
+    /* 이미지처럼 구분선 */
+    & + & {
+      border-top: px(1) solid var(--color-border);
+    }
+  }
+
+  &__top-menu-icon {
+    flex: 0 0 px(44); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+
+    svg {
+      width: px(22);
+      height: px(22);
+      display: block;
+    }
+  }
+
+  &__top-menu-title {
+    flex: 1;                   
+    text-align: center;        
+    font-size: px(20);
+    font-weight: 800;
+    color: var(--color-text-dark);
+    line-height: 1.2;
+    margin-left:px(-40)
+
+  }
+ 
+  &__floating-close {
+    position: absolute; 
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(100% + #{px(16)}); 
+
+    width: px(44);
+    height: px(44);
+    border-radius: 999px;
+    border: none;
+    background: var(--color-card);
+    box-shadow: var(--shadow-overlay-dark);
+    cursor: pointer;
+    z-index: 10;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--color-text-dark);
+    font-size: px(22);
+    line-height: 1;
+  }
+}
 .popup--image-zoom {
   display: flex;
   flex-direction: column;
@@ -517,7 +630,8 @@
       height: px(36);
       border-radius: 50%;
       box-shadow: 0 px(1) px(4) rgba(0, 0, 0, 0.18);
-      transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+      transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.15s ease, background-color 0.15s ease,
+        box-shadow 0.15s ease;
       top: 50%;
       transform: translateY(-50%);
 
@@ -600,4 +714,3 @@
     display: block;
   }
 }
-

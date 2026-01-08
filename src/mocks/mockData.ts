@@ -130,9 +130,9 @@ export const mockListSyncOptions = [
 ];
 
 export const mockCarouselSlides = [
-  { id: 1, title: "슬라이드 1", description: "첫 번째 슬라이드" },
-  { id: 2, title: "슬라이드 2", description: "두 번째 슬라이드" },
-  { id: 3, title: "슬라이드 3", description: "세 번째 슬라이드" },
+  { id: 1, title: "슬라이드 1", desc: "첫 번째 슬라이드" },
+  { id: 2, title: "슬라이드 2", desc: "두 번째 슬라이드" },
+  { id: 3, title: "슬라이드 3", desc: "세 번째 슬라이드" },
 ];
 
 export const mockTableBasicRows = [
