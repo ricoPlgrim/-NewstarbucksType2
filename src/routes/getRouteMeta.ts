@@ -9,30 +9,22 @@ const DEFAULT_META: RouteMeta = {
 };
 
 function normalizeMeta(meta: RouteMeta): RouteMeta {
-  // ✅ headerType(판별자) 유지한 채로 headerProps만 기본값 보정
+  // ✅ meta를 그대로 유지하면서 headerProps만 기본값 보정
   if (meta.headerType === "main") {
     return {
-      headerType: "main",
-      headerProps: {
-        ...(meta.headerProps ?? {}),
-      },
-      headerTopSheetOptions: meta.headerTopSheetOptions,
+      ...meta, // ✅ bottomDock 포함해서 다 유지됨
+      headerProps: { ...(meta.headerProps ?? {}) },
     };
   }
 
   if (meta.headerType === "sub") {
     return {
-      headerType: "sub",
-      onBackTarget: meta.onBackTarget,
-      headerProps: {
-        ...(meta.headerProps ?? {}),
-      },
-      headerTopSheetOptions: meta.headerTopSheetOptions,
+      ...meta, // ✅ headerTopSheetOptions도 그대로, bottomDock은 타입상 never라 없겠지만 안전
+      headerProps: { ...(meta.headerProps ?? {}) },
     };
   }
 
-  // none
-  return { headerType: "none" };
+  return meta; // {headerType:"none"} 그대로
 }
 
 export function getRouteMeta(pathname: string): RouteMeta {

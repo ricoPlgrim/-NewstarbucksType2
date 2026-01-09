@@ -67,6 +67,56 @@
     /* 구형 브라우저 fallback */
     max-height: calc(100vh - #{px(12)});
 
+    /* ✅ (추가) 우측 상단 X */
+    // popup__sheet-close
+    &-close {
+      position: absolute;
+      top: px(19);
+      right: px(16);
+      width: px(24);
+      height: px(24);
+      cursor: pointer;
+      line-height: 1;
+      color: var(--color-text-dark);
+    }
+
+    /* ✅ (추가) 공지형 레이아웃 */
+    &-notice {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: px(10);
+      padding-top: px(8);
+    }
+
+    &-notice-icon {
+      width: px(42);
+      height: px(42);
+      border-radius: 999px;
+      background: var(--color-overlay-lighter);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-dark);
+
+      /* 아이콘 SVG/이모지 대응 */
+      svg {
+        width: px(28);
+        height: px(28);
+      }
+    }
+
+    &__sheet-notice-title {
+      font-weight: 800;
+      color: var(--color-text-dark);
+    }
+
+    &__sheet-notice-desc {
+      color: var(--color-text-light);
+      line-height: 1.6;
+    }
+    
     /* ✅ 드래그 제거했으니 is-dragging 무의미: 남겨도 되지만 커서/터치 비활성화 */
     &.is-dragging {
       transition: none;

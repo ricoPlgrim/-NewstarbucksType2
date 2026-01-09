@@ -1,6 +1,6 @@
-// src/layouts/RootLayout.tsx
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header/Header";
+import BottomDock from "../components/BottomDock/BottomDock";
 import { getRouteMeta } from "../routes/getRouteMeta";
 import type { HeaderTopSheetOption } from "../types/layout";
 
@@ -10,18 +10,17 @@ export default function RootLayout() {
 
   const meta = getRouteMeta(pathname);
 
-  // ✅meta(정적) -> option(동적) 변환
-  const topSheetOptions: HeaderTopSheetOption[] | undefined =
-  meta.headerTopSheetOptions?.map((o) => {
-    const target = o.target; // ✅ 여기서 string | undefined
 
-    return {
-      title: o.label,
-      icon: o.icon ? <span>{o.icon}</span> : undefined,
-      disabled: o.disabled,
-      onClick: target ? () => navigate(target) : undefined, // ✅ target은 여기서 string으로 확정
-    };
-  });
+  const topSheetOptions: HeaderTopSheetOption[] | undefined =
+    meta.headerTopSheetOptions?.map((o) => {
+      const target = o.target;
+      return {
+        title: o.label,
+        icon: o.icon ? <span>{o.icon}</span> : undefined,
+        disabled: o.disabled,
+        onClick: target ? () => { navigate(target); } : undefined,
+      };
+    });
 
   // ✅ 헤더가 없는 페이지
   if (meta.headerType === "none") {
@@ -34,14 +33,16 @@ export default function RootLayout() {
     );
   }
 
-  // ✅ main 헤더
+  // ✅ main 헤더 (BottomDock 사용)
   if (meta.headerType === "main") {
     const mainProps = meta.headerProps ?? {};
+    const dock = meta.bottomDock;
+    const notificationTarget = mainProps.notificationTarget;
 
-    // notificationTarget이 있을 때만 navigate 실행
-    const onNotificationClick = mainProps.notificationTarget
-      ? () => navigate(mainProps.notificationTarget!)
+    const onNotificationClick = notificationTarget
+      ? () => { navigate(notificationTarget); }
       : undefined;
+
 
     const headerProps = {
       ...mainProps,
@@ -49,21 +50,49 @@ export default function RootLayout() {
       onNotificationClick,
     };
 
+    // ✅ BottomDock item icon은 ReactNode니까 그대로 써도 됨(문자/이모지 OK)
+    const dockItems = dock?.items?.map((it) => ({
+      key: it.key,
+      label: it.label,
+      icon: it.icon,
+    }));
+
+    const defaultActiveIndex =
+    dock?.items?.findIndex((it) => it.active) ?? -1;
+
+    const resolvedDefaultActiveIndex =
+    defaultActiveIndex >= 0 ? defaultActiveIndex : undefined;
+
+
     return (
       <div className="layout">
         <Header variant="main" {...headerProps} />
+
         <main className="layout__content">
           <Outlet />
         </main>
+
+        {dock?.show && dockItems && (
+          <BottomDock
+            items={dockItems}
+            defaultActiveIndex={resolvedDefaultActiveIndex}
+            onChange={(key) => {
+              const target = dock.items?.find((x) => x.key === key)?.target;
+              if (target) void navigate(target);
+            }}
+          />
+        )}
       </div>
     );
   }
 
-  // ✅ sub 헤더
+  // ✅ sub 헤더 (BottomDock 사용안함)
   const subProps = meta.headerProps ?? {};
+  const onBackTarget = meta.onBackTarget;
 
-  const backTarget = meta.onBackTarget; // string | undefined
-  const onBack = backTarget ? () => navigate(backTarget) : undefined;
+  const onBack = onBackTarget
+    ? () => { navigate(onBackTarget); }
+    : undefined;
 
   const headerProps = {
     ...subProps,

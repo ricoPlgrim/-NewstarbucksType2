@@ -1,18 +1,32 @@
-// src/types/layout.ts
 import type { ReactNode } from "react";
+import type { BottomDockItem } from "../components/BottomDock/BottomDock";
+
+/** BottomDock - routeMeta(정적)용 */
+export type BottomDockItemMeta = {
+  key: string;
+  label: string;
+  icon?: string;      // ✅ meta에서는 string으로
+  target?: string;    // ✅ 눌렀을 때 이동할 경로
+  active?: boolean;    // ✅ 현재 활성화된 아이템
+};
+
+export type BottomDockMeta = {
+  show: boolean;
+  items?: BottomDockItemMeta[];   // ✅ 여기! BottomDockItem 쓰지 말기
+};
 
 /** Header */
 export type HeaderType = "main" | "sub" | "none";
 
-/** ✅ routeMeta에 저장되는 정적 옵션 (데이터만) */
+/** routeMeta에 저장되는 정적 옵션 */
 export type HeaderTopSheetOptionMeta = {
-  icon?: string;     // ✅ 예: "🔒" 또는 아이콘 키
-  label: string;     // ✅ 표시 텍스트
-  target?: string;   // ✅ 이동 경로
+  icon?: string;
+  label: string;
+  target?: string;
   disabled?: boolean;
 };
 
-/** ✅ 실제 컴포넌트에서 쓰는 동적 옵션 */
+/** 컴포넌트에서 쓰는 동적 옵션 */
 export type HeaderTopSheetOption = {
   icon?: ReactNode;
   title: string;
@@ -20,15 +34,14 @@ export type HeaderTopSheetOption = {
   disabled?: boolean;
 };
 
-
-/** ✅ Main Header 전용 props */
+/** Main Header 전용 props */
 export type HeaderMainProps = {
   notificationCount?: number;
-  notificationTarget?: string; // ✅ routeMeta에서 관리
+  notificationTarget?: string;
   sticky?: boolean;
 };
 
-/** ✅ Sub Header 전용 props */
+/** Sub Header 전용 props */
 export type HeaderSubProps = {
   categoryName?: string;
   showUtilities?: boolean;
@@ -36,12 +49,12 @@ export type HeaderSubProps = {
   sticky?: boolean;
 };
 
-
 export type RouteMeta =
   | {
       headerType: "main";
       headerProps?: HeaderMainProps;
       headerTopSheetOptions?: HeaderTopSheetOptionMeta[];
+      bottomDock?: BottomDockMeta;   // ✅ main에서만 허용
       onBackTarget?: never;
     }
   | {
@@ -49,10 +62,12 @@ export type RouteMeta =
       headerProps?: HeaderSubProps;
       onBackTarget?: string;
       headerTopSheetOptions?: HeaderTopSheetOptionMeta[];
+      bottomDock?: never;            // ✅ sub에서는 금지
     }
   | {
       headerType: "none";
       headerProps?: never;
       onBackTarget?: never;
       headerTopSheetOptions?: never;
+      bottomDock?: never;            // ✅ none에서도 금지
     };

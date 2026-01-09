@@ -2,8 +2,10 @@
 .bottom-dock {
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   right: 0;
+  top:auto;
   width: 100%;
   display: flex;
   gap: px(8);
@@ -11,9 +13,10 @@
   padding-bottom: calc(#{px(10)} + env(safe-area-inset-bottom, 0px));
   background: var(--color-card);
   z-index: 2100;
-  @supports (padding: max(0px)) {
-    padding-bottom: max(#{px(10)}, env(safe-area-inset-bottom));
-  }
+  
+  // @supports (padding: max(0px)) {
+  //   padding-bottom: max(#{px(10)}, env(safe-area-inset-bottom));
+  // }
 
   &--relative {
     position: relative !important;

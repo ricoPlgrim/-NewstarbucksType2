@@ -45,77 +45,98 @@ const GreenApronCardPage = () => {
   // 마지막 획득 배지의 위치 계산
   useEffect(() => {
     if (!showBadgePopup || !badgeSectionRef.current) return;
-
+  
     const updatePopupPosition = () => {
       const section = badgeSectionRef.current;
       const popup = popupRef.current;
       if (!section) return;
-
-      // is-earned 클래스를 가진 모든 배지 아이템 찾기
-      const earnedItems = section.querySelectorAll('.green-apron-card-page__badge-item.is-earned');
-      
+  
+      const earnedItems = section.querySelectorAll(
+        ".green-apron-card-page__badge-item.is-earned"
+      );
+  
       if (earnedItems.length === 0) {
         setPopupPosition(null);
         return;
       }
-
-      // 마지막 획득 배지
+  
       const lastEarnedItem = earnedItems[earnedItems.length - 1] as HTMLElement;
-      const sectionRect = section.getBoundingClientRect();
+  
+      // ✅ popup이 실제 좌표 적용되는 기준(없으면 section)
+      const containerEl = (popup?.offsetParent as HTMLElement | null) ?? section;
+  
+      const containerRect = containerEl.getBoundingClientRect();
       const itemRect = lastEarnedItem.getBoundingClientRect();
-
-      // 마지막 획득 배지의 하단 아래 위치 계산
-      let top = itemRect.bottom - sectionRect.top + 12;
-      let left = itemRect.left - sectionRect.left + (itemRect.width / 2);
-
-      // 팝업이 렌더링된 후 크기를 측정하여 경계 체크
-      if (popup) {
-        const popupRect = popup.getBoundingClientRect();
-        const popupWidth = popupRect.width;
-        const popupHeight = popupRect.height;
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        const sectionLeft = sectionRect.left;
-
-        // 왼쪽 경계 체크 (팝업의 절반 너비 고려)
-        const minLeft = popupWidth / 2;
-        if (left < minLeft) {
-          left = minLeft;
-        }
-
-        // 오른쪽 경계 체크
-        const maxLeft = (sectionRect.width || viewportWidth - sectionLeft) - (popupWidth / 2);
-        if (left > maxLeft) {
-          left = maxLeft;
-        }
-
-        // 상단 경계 체크
-        if (top < 0) {
-          top = 12;
-        }
-
-        // 하단 경계 체크
-        const maxTop = (sectionRect.height || viewportHeight) - popupHeight - 12;
-        if (top > maxTop) {
-          top = maxTop;
-        }
-      }
-
-      setPopupPosition({ top, left });
+  
+      // ✅ CSS 변수 safe 값 읽기 (ex: "1rem", "12px")
+      const safeRaw = getComputedStyle(containerEl)
+        .getPropertyValue("--badge-popup-safe")
+        .trim();
+  
+      // ✅ rem → px 변환 유틸
+      const rootFontSize = parseFloat(
+        getComputedStyle(document.documentElement).fontSize
+      ); // 보통 16px
+  
+      const toPx = (v: string) => {
+        if (!v) return 12;
+  
+        // "12px"
+        if (v.endsWith("px")) return parseFloat(v);
+  
+        // "1rem"
+        if (v.endsWith("rem")) return parseFloat(v) * rootFontSize;
+  
+        // 숫자만 들어오면 px로 간주
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 12;
+      };
+  
+      const SAFE = toPx(safeRaw);
+  
+      console.log("safeRaw", safeRaw);
+      console.log("SAFE(px)", SAFE);
+  
+      // ✅ anchor를 container 기준 좌표로 계산 (중앙점)
+      const anchorX = itemRect.left - containerRect.left + itemRect.width / 2;
+  
+      // ✅ 아래로 띄우는 값도 SAFE 기준으로 통일 (원하면 SAFE 대신 12 그대로 둬도 됨)
+      const anchorY = itemRect.bottom - containerRect.top + SAFE;
+  
+      // ✅ popup 크기 (렌더 이후)
+      const popupWidth = popup?.offsetWidth ?? 0;
+      const popupHeight = popup?.offsetHeight ?? 0;
+  
+      // ✅ translateX(-50%) 기준 => left는 중앙점
+      const minLeft = popupWidth / 2 + SAFE;
+      const maxLeft = containerRect.width - popupWidth / 2 - SAFE;
+  
+      const clampedLeft =
+        popupWidth > 0
+          ? Math.max(minLeft, Math.min(anchorX, maxLeft))
+          : anchorX;
+  
+      const minTop = SAFE;
+      const maxTop = containerRect.height - popupHeight - SAFE;
+  
+      const clampedTop =
+        popupHeight > 0
+          ? Math.max(minTop, Math.min(anchorY, maxTop))
+          : anchorY;
+  
+      setPopupPosition({ top: clampedTop, left: clampedLeft });
     };
-
-    // 팝업이 렌더링된 후 위치 계산
+  
     const timeoutId = setTimeout(updatePopupPosition, 0);
     updatePopupPosition();
-
-    // 리사이즈 시 위치 재계산
-    window.addEventListener('resize', updatePopupPosition);
+  
+    window.addEventListener("resize", updatePopupPosition);
     return () => {
       clearTimeout(timeoutId);
-      window.removeEventListener('resize', updatePopupPosition);
+      window.removeEventListener("resize", updatePopupPosition);
     };
   }, [showBadgePopup, badges]);
-
+  
   // 프로모션 슬라이드 데이터
   const promoSlides = [
     {

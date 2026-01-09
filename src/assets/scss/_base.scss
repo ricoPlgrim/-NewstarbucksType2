@@ -68,10 +68,9 @@ body {
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  min-height: 100vh;
-  min-height: 100dvh;
+  // min-height: 100vh;
+  // min-height: 100dvh;
   min-width: 320px;
-  overflow-x: auto;
 }
 
 h1, h2, h3, h4, h5, h6,
@@ -132,8 +131,8 @@ body.loaded {
 }
 
 #root {
-  min-height: 100vh;
-  min-height: 100dvh;
+  // min-height: 100vh;
+  // min-height: 100dvh;
 }
 
 .sr-only {

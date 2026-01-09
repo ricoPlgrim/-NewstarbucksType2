@@ -6,6 +6,8 @@ export type RouteMetaItem = {
   meta: RouteMeta;
 };
 
+
+
 export const routeMetaMap: RouteMetaItem[] = [
   { pattern: "/detail/:id", meta: { headerType: "sub", onBackTarget: "/", headerProps: {} } },
   { pattern: "/detail/*", meta: { headerType: "sub", onBackTarget: "/", headerProps: {} } },
@@ -27,6 +29,15 @@ export const routeMetaMap: RouteMetaItem[] = [
         { label: "메뉴A", icon: "🔒", target: "/menu-a" },
         { label: "메뉴B", icon: "🔒", target: "/menu-b" },
       ],
+      bottomDock: {
+        show: true,
+        items: [
+          { key: "home", label: "홈", icon: "🏠", target: "/", active: true },
+          { key: "search", label: "검색", icon: "🔍", target: "/search" },
+          { key: "bookmark", label: "즐겨찾기", icon: "⭐", target: "/bookmark" },
+          { key: "profile", label: "내 정보", icon: "👤", target: "/profile" },
+        ],
+      },
     },
   },
 ];

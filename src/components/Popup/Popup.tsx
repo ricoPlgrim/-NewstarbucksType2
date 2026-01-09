@@ -212,6 +212,8 @@ export function BottomSheetPopup({
   options = [],
   content,
   className = "",
+  topIcon,                
+  showCloseButton = true, 
 }: {
   open: boolean;
   onClose: () => void;
@@ -220,6 +222,8 @@ export function BottomSheetPopup({
   options?: Array<{ icon?: string; label: string; onClick?: () => void }>;
   content?: ReactNode;
   className?: string;
+  topIcon?: ReactNode;           
+  showCloseButton?: boolean;     
 }) {
   const popupRef = useRef<HTMLDivElement | null>(null);
 
@@ -308,50 +312,61 @@ export function BottomSheetPopup({
         aria-modal="true"
         aria-label={title ? `${title} 바텀시트` : "바텀시트"}
       >
-        {/* ✅ 드래그 기능 제거: 시각적 핸들만 */}
-        <div className="popup__handle popup__handle--static" aria-hidden="true" />
+        {/* ✅ 우측 상단 X 버튼 */}
+        {showCloseButton && (
+          <button
+            type="button"
+            className="popup--sheet-close"
+            aria-label="닫기"
+            onClick={(e) => {
+              e.stopPropagation();
+              closeWithAnimation();
+            }}
+          >
+            ✕
+          </button>
+        )}
 
-        {hasHeader && (
-          <div className="popup__body">
+        {/* ✅ 시안처럼: 아이콘 + 중앙 텍스트 */}
+        {(topIcon || title || description) && (
+          <div className="popup--sheet-notice">
+            {topIcon && <div className="popup--sheet-notice-icon">{topIcon}</div>}
+
             {title && (
-              <Typography variant="h4" size="small" className="popup__title">
+              <Typography variant="h4" size="small" className="popup--sheet-notice-title">
                 {title}
               </Typography>
             )}
+
             {description && (
-              <Typography variant="body" size="small" color="muted" className="popup__description">
+              <Typography variant="body" size="small" color="muted" className="popup__sheet-notice-desc">
                 {description}
               </Typography>
-            )}
-
-            {options.length > 0 && (
-              <div className="popup__options">
-                {options.map((option, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="popup__option-item"
-                    onClick={() => {
-                      option.onClick?.();
-                      closeWithAnimation();
-                    }}
-                  >
-                    {option.icon && <span className="popup__option-icon">{option.icon}</span>}
-                    <span className="popup__option-label">{option.label}</span>
-                  </button>
-                ))}
-              </div>
             )}
           </div>
         )}
 
-        {content && <div className="popup__content">{content}</div>}
+        {/* ✅ 기존 옵션/컨텐츠는 그대로 (필요하면 안내형에서는 안 쓰면 됨) */}
+        {options.length > 0 && (
+          <div className="popup__options">
+            {options.map((option, index) => (
+              <button
+                key={index}
+                type="button"
+                className="popup__option-item"
+                onClick={() => {
+                  option.onClick?.();
+                  closeWithAnimation();
+                }}
+              >
+                {option.icon && <span className="popup__option-icon">{option.icon}</span>}
+                <span className="popup__option-label">{option.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
 
-        <div className="popup__actions popup__actions--stack">
-          <Button variant="ghost" onClick={closeWithAnimation}>
-            취소
-          </Button>
-        </div>
+        {content && <div className="popup__content">{content}</div>}
       </div>
     </div>
   );

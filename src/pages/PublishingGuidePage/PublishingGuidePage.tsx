@@ -25,7 +25,7 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/effect-flip";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import ImageZoomPopup from "../../components/Popup/ImageZoomPopup";
-import { BasicPopup, BottomSheetPopup, FullscreenPopup } from "../../components/Popup/Popup";
+import { BasicPopup, BottomSheetPopup, TopSheetPopup, FullscreenPopup } from "../../components/Popup/Popup";
 import Toggle from "../../components/Toggle/Toggle";
 import Toast from "../../components/Toast/Toast";
 import BottomDock from "../../components/BottomDock/BottomDock";
@@ -1407,6 +1407,7 @@ const TablePreview = () => {
 const PopupPreview = () => {
   const [isBasicOpen, setIsBasicOpen] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isTopOpen, setIsTopOpen] = useState(false); // ✅ 추가
   const [isFullOpen, setIsFullOpen] = useState(false);
   const [isFullNoHeaderOpen, setIsFullNoHeaderOpen] = useState(false);
   const [isFullBothOpen, setIsFullBothOpen] = useState(false);
@@ -1417,9 +1418,16 @@ const PopupPreview = () => {
         <button className="btn btn--primary btn--sm" onClick={() => setIsBasicOpen(true)}>
           Basic 팝업
         </button>
+
         <button className="btn btn--secondary btn--sm" onClick={() => setIsSheetOpen(true)}>
           바텀시트
         </button>
+
+        {/* ✅ TopSheet 버튼 추가 */}
+        <button className="btn btn--secondary btn--sm" onClick={() => setIsTopOpen(true)}>
+          탑시트
+        </button>
+
         <button className="btn btn--ghost btn--sm" onClick={() => setIsFullOpen(true)}>
           풀스크린 (X버튼)
         </button>
@@ -1437,7 +1445,7 @@ const PopupPreview = () => {
         onClose={() => setIsBasicOpen(false)}
         images={[
           "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&h=600&fit=crop",
-          "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&h=600&fit=crop"
+          "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&h=600&fit=crop",
         ]}
         title="Setting my friends data"
         description="You can chat freely after a privacy my chatroom by chatting data"
@@ -1455,27 +1463,28 @@ const PopupPreview = () => {
         ]}
       />
 
-      {/* Bottom Sheet */}
+      {/* ✅ Bottom Sheet (시안 카드형 공지) */}
       <BottomSheetPopup
         open={isSheetOpen}
         onClose={() => setIsSheetOpen(false)}
-        title="바텀시트 팝업"
-        content={
-          <div>
-            <h3>여기부터 자유 UI</h3>
-            <p>Typography/Accordion/폼/이미지 뭐든 넣기</p>
-
-            <Accordion
-              type="independent"
-              items={[
-                { id: "a", label: "항목1", content: <div>아코디언 내용1 JSX</div> },
-                { id: "b", label: "항목2", content: <div>아코디언 내용2 JSX</div>},
-              ]}
-            />
-          </div>
-        }
+        topIcon={<span aria-hidden>🛠️</span>}
+        title="STORE365 시스템 점검 안내"
+        description={"9월 25일 AM 6:00~AM 9:00 서비스<br />업그레이드가 예정되어 있습니다."}
+        showCloseButton={true}
       />
-      {/* Fullscreen Popup - X 버튼만 있는 타입 */}
+
+      {/* ✅ Top Sheet (상단 메뉴) */}
+      <TopSheetPopup
+        open={isTopOpen}
+        onClose={() => setIsTopOpen(false)}
+        closeButton={true}
+        items={[
+          { icon: "🔒", title: "메뉴A", onClick: () => console.log("메뉴A") },
+          { icon: "⚙️", title: "메뉴B", onClick: () => console.log("메뉴B") },
+        ]}
+      />
+
+      {/* Fullscreen Popup - X 버튼만 */}
       <FullscreenPopup
         open={isFullOpen}
         onClose={() => setIsFullOpen(false)}
@@ -1491,7 +1500,7 @@ const PopupPreview = () => {
         showBottomClose={false}
       />
 
-      {/* Fullscreen Popup - 하단 닫기 버튼만 있는 타입 */}
+      {/* Fullscreen Popup - 하단 닫기 버튼만 */}
       <FullscreenPopup
         open={isFullNoHeaderOpen}
         onClose={() => setIsFullNoHeaderOpen(false)}
@@ -1508,7 +1517,7 @@ const PopupPreview = () => {
         showBottomClose={true}
       />
 
-      {/* Fullscreen Popup - X 버튼과 하단 닫기 버튼 둘 다 있는 타입 */}
+      {/* Fullscreen Popup - 상단 X + 하단 닫기 */}
       <FullscreenPopup
         open={isFullBothOpen}
         onClose={() => setIsFullBothOpen(false)}
@@ -5523,285 +5532,84 @@ type TableRow = {
     label: "팝업",
     title: "팝업 UI",
     description:
-      "Basic 중앙 팝업, 바텀시트(드래그로 닫기), 풀스크린 팝업을 제공합니다.",
-    code: `import { BasicPopup, BottomSheetPopup, FullscreenPopup } from "./Popup";
-import Button from "./Button";
-import { useState } from "react";
-
-type PopupAction = { label: string; variant?: "primary" | "ghost" | "secondary"; onClick: () => void };
-
-const [isBasicOpen, setIsBasicOpen] = useState<boolean>(false);
-const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
-const [isFullOpen, setIsFullOpen] = useState<boolean>(false);
-
-<BasicPopup
-  open={isBasicOpen}
-  onClose={() => setIsBasicOpen(false)}
-  icon="🔒"
-  title="알림"
-  description="이 작업을 계속하시겠습니까?"
-  actions={[
-    { label: "취소", variant: "ghost", onClick: () => setIsBasicOpen(false) },
-    { label: "확인", variant: "primary", onClick: () => setIsBasicOpen(false) },
-  ] satisfies PopupAction[]}
-/>;
-
-<BasicPopup
-  open={isBasicOpen}
-  onClose={() => setIsBasicOpen(false)}
-  title="알림"
-  description="작업이 완료되었습니다."
-  actions={[
-    { label: "확인", variant: "primary", onClick: () => setIsBasicOpen(false) },
-  ] satisfies PopupAction[]}
-/>;
-
-<BottomSheetPopup
-  open={isSheetOpen}
-  onClose={() => setIsSheetOpen(false)}
-  title="옵션 선택"
-  <div>
-    <h3>여기부터 완전 자유 UI</h3>
-    <p>폼도 넣고, 카드도 넣고, 리스트도 마음대로</p>
-    <Button variant="primary">확인</Button>
-  </div>
-/>;
-
-// ===== BottomSheetPopup 드래그 기능 =====
-// 바텀시트는 드래그하여 닫을 수 있습니다.
-// - 드래그 시작: onMouseDown 또는 onTouchStart
-// - 드래그 중: onMouseMove 또는 onTouchMove (최대 240px 이동)
-// - 드래그 종료: onMouseUp 또는 onTouchEnd
-// - 임계값(THRESHOLD): 120px 이상 드래그하면 팝업 닫기
-//
-// 내부 상태 관리:
-// - offset: 드래그 오프셋 (0 ~ 240px)
-// - startY: 드래그 시작 Y 좌표
-//
-// 드래그 종료 시:
-// if (offset > THRESHOLD) {
-//   onClose?.();
-// }
-
-// ===== FullscreenPopup 사용 =====
-// 전체 화면을 덮는 풀스크린 팝업입니다.
-// 세 가지 타입을 제공합니다:
-// 1. 상단 X 버튼만 있는 타입 (기본)
-// 2. 하단 닫기 버튼만 있는 타입
-// 3. 상단 X 버튼과 하단 닫기 버튼 둘 다 있는 타입
-
-const [isFullOpen, setIsFullOpen] = useState(false);
-
-// 타입 1: 상단 X 버튼만 있는 타입 (기본)
-<FullscreenPopup
-  open={isFullOpen}
-  onClose={() => setIsFullOpen(false)}
-  title="상세 정보"
-  body={
-    <div>
-      <p>풀스크린 팝업 내용입니다.</p>
-      <p>자유롭게 콘텐츠를 구성할 수 있습니다.</p>
-      <p>상단 헤더에 X 버튼만 있습니다.</p>
-    </div>
-  }
-  showHeaderClose={true}   // 기본값이므로 생략 가능
-  showBottomClose={false}  // 기본값이므로 생략 가능
-/>
-
-// 타입 2: 하단 닫기 버튼만 있는 타입
-<FullscreenPopup
-  open={isFullOpen}
-  onClose={() => setIsFullOpen(false)}
-  title="상세 정보"
-  body={
-    <div>
-      <p>풀스크린 팝업 내용입니다.</p>
-      <p>자유롭게 콘텐츠를 구성할 수 있습니다.</p>
-      <p>상단 X 버튼이 없고 하단 닫기 버튼만 있습니다.</p>
-    </div>
-  }
-  showHeaderClose={false}  // X 버튼 숨김
-  showBottomClose={true}    // 하단 닫기 버튼 표시
-/>
-
-// 타입 3: 상단 X 버튼과 하단 닫기 버튼 둘 다 있는 타입
-<FullscreenPopup
-  open={isFullOpen}
-  onClose={() => setIsFullOpen(false)}
-  title="상세 정보"
-  body={
-    <div>
-      <p>풀스크린 팝업 내용입니다.</p>
-      <p>자유롭게 콘텐츠를 구성할 수 있습니다.</p>
-      <p>상단 X 버튼과 하단 닫기 버튼을 모두 제공합니다.</p>
-    </div>
-  }
-  showHeaderClose={true}   // X 버튼 표시
-  showBottomClose={true}   // 하단 닫기 버튼 표시
-/>
-
-// ===== 오버레이 클릭으로 닫기 =====
-// BasicPopup과 BottomSheetPopup은 오버레이 클릭 시 닫힙니다.
-// handleOverlayClick 함수가 onClose를 호출합니다.
-// 팝업 내부 클릭 시 이벤트 전파를 막아 오버레이 클릭으로 인한 닫힘을 방지합니다.
-// const handlePopupClick = (e) => {
-//   e.stopPropagation();
-// };
-
-// ===== 조건부 렌더링 =====
-// 모든 팝업은 open이 false이면 null을 반환하여 렌더링하지 않습니다.
-// if (!open) return null;
-
-// ===== BasicPopup 액션 버튼 =====
-// actions 배열의 각 항목은 Button 컴포넌트로 렌더링됩니다.
-// actions.map((action, idx) => (
-//   <Button
-//     key={idx}
-//     variant={action.variant || "ghost"}
-//     onClick={action.onClick}
-//   >
-//     {action.label}
-//   </Button>
-// ))
-
-// ===== BottomSheetPopup 드래그 핸들 =====
-// 바텀시트 상단에 드래그 핸들이 표시됩니다.
-// <div className="popup__handle" />
-// 시각적으로 드래그 가능함을 나타냅니다.
-
-// ===== FullscreenPopup 닫기 버튼 =====
-// 풀스크린 팝업은 세 가지 닫기 버튼 타입을 제공합니다:
-// 1. 상단 X 버튼만 있는 타입 (showHeaderClose={true}, showBottomClose={false}, 기본값)
-// 2. 하단 닫기 버튼만 있는 타입 (showHeaderClose={false}, showBottomClose={true})
-// 3. 상단 X 버튼과 하단 닫기 버튼 둘 다 있는 타입 (showHeaderClose={true}, showBottomClose={true})
-// 
-// 상단 X 버튼:
-// <button className="popup__close" onClick={onClose} aria-label="닫기">✕</button>
-// 
-// 하단 닫기 버튼:
-// <div className="popup__actions popup__actions--stack">
-//   <Button variant="primary" onClick={onClose}>닫기</Button>
-// </div>
-// 
-// 하단 닫기 버튼은 항상 화면 하단에 고정되며, 본문 영역이 스크롤 가능합니다.
-
-// ===== UI 구조 =====
-// BasicPopup:
-//   popup-overlay: 오버레이 (클릭 시 닫기)
-//     popup popup--basic: 팝업 컨테이너
-//       popup__image: 아이콘 영역
-//       popup__body: 본문 영역
-//       popup__dots: 데코레이션 도트
-//       popup__actions: 액션 버튼 영역
-//
-// BottomSheetPopup:
-//   popup-overlay popup-overlay--sheet: 오버레이
-//     popup popup--sheet: 팝업 컨테이너 (transform 적용)
-//       popup__handle: 드래그 핸들
-//       popup__body: 본문 영역
-//       popup__actions: 액션 버튼 영역
-//
-// FullscreenPopup:
-//   popup-overlay popup-overlay--full: 오버레이
-//     popup popup--full: 팝업 컨테이너
-//       popup__header: 헤더 (제목 + X 버튼, showHeaderClose에 따라 표시/숨김)
-//       popup__body: 본문 영역 (스크롤 가능)
-//       popup__actions: 하단 닫기 버튼 영역 (항상 하단 고정)
-
-// ===== Typography 사용 =====
-// 모든 팝업은 내부적으로 Typography 컴포넌트를 사용합니다:
-// - title: Typography variant="h4", size="small"
-// - description: Typography variant="body", size="small", color="muted"
-
-// ===== 접근성 =====
-// - 오버레이 클릭으로 닫기 기능 제공
-// - FullscreenPopup의 닫기 버튼에 aria-label="닫기" 제공
-// - 키보드 접근성 지원 (ESC 키로 닫기 - 구현 필요 시)
-// - 포커스 트랩 (모달 내부에 포커스 유지 - 구현 필요 시)
-
-// ===== 사용 사례 =====
-// 1. 확인 다이얼로그
-const handleDelete = () => {
-  setIsBasicOpen(true);
-};
-
-<BasicPopup
-  open={isBasicOpen}
-  onClose={() => setIsBasicOpen(false)}
-  icon="🗑️"
-  title="삭제 확인"
-  description="정말로 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
-  actions={[
-    {
-      label: "취소",
-      variant: "ghost",
-      onClick: () => setIsBasicOpen(false),
-    },
-    {
-      label: "삭제",
-      variant: "primary",
-      onClick: () => {
-        deleteItem();
-        setIsBasicOpen(false);
-      },
-    },
-  ]}
-/>
-
-// 2. 옵션 선택 (바텀시트)
-<BottomSheetPopup
-  open={isSheetOpen}
-  onClose={() => setIsSheetOpen(false)}
-  title="정렬 방식"
-  description="원하는 정렬 방식을 선택하세요."
-/>
-
-// 3. 상세 정보 (풀스크린 - X 버튼만 있는 타입)
-<FullscreenPopup
-  open={isFullOpen}
-  onClose={() => setIsFullOpen(false)}
-  title="상품 상세 정보"
-  body={<ProductDetail product={product} />}
-  showHeaderClose={true}   // 기본값이므로 생략 가능
-  showBottomClose={false}  // 기본값이므로 생략 가능
-/>
-
-// 4. 상세 정보 (풀스크린 - 하단 닫기 버튼만 있는 타입)
-<FullscreenPopup
-  open={isFullOpen}
-  onClose={() => setIsFullOpen(false)}
-  title="상품 상세 정보"
-  body={<ProductDetail product={product} />}
-  showHeaderClose={false}  // X 버튼 숨김
-  showBottomClose={true}   // 하단 닫기 버튼 표시
-/>
-
-// 5. 상세 정보 (풀스크린 - X 버튼과 하단 닫기 버튼 둘 다 있는 타입)
-<FullscreenPopup
-  open={isFullOpen}
-  onClose={() => setIsFullOpen(false)}
-  title="상품 상세 정보"
-  body={<ProductDetail product={product} />}
-  showHeaderClose={true}   // X 버튼 표시
-  showBottomClose={true}   // 하단 닫기 버튼 표시
-/>
-
-// ===== 주의사항 =====
-// 1. open prop이 false이면 팝업이 렌더링되지 않습니다 (null 반환).
-// 2. onClose는 필수이며, 팝업을 닫을 때 호출됩니다.
-// 3. BasicPopup의 actions 배열이 비어있으면 액션 버튼이 표시되지 않습니다.
-// 4. BottomSheetPopup은 드래그로 닫을 수 있으며, 임계값은 120px입니다.
-// 5. BottomSheetPopup이 닫힐 때 offset과 startY 상태가 자동으로 초기화됩니다.
-// 6. FullscreenPopup의 body는 ReactNode이므로 자유롭게 콘텐츠를 구성할 수 있습니다.
-// 7. FullscreenPopup은 showHeaderClose와 showBottomClose prop으로 세 가지 타입을 제공합니다:
-//    - showHeaderClose={true}, showBottomClose={false} (기본): 상단 X 버튼만 표시
-//    - showHeaderClose={false}, showBottomClose={true}: 하단 닫기 버튼만 표시
-//    - showHeaderClose={true}, showBottomClose={true}: 상단 X 버튼과 하단 닫기 버튼 둘 다 표시
-// 8. FullscreenPopup의 하단 닫기 버튼은 항상 화면 하단에 고정되며, 본문 영역은 스크롤 가능합니다.
-// 7. 오버레이 클릭 시 팝업이 닫히므로, 팝업 내부 클릭 시 stopPropagation을 사용합니다.
-// 8. BasicPopup의 icon은 이모지, 텍스트, SVG 등 다양한 형태를 지원합니다.
-// 9. 모든 팝업은 Typography 컴포넌트를 사용하여 텍스트를 렌더링합니다.
-// 10. 접근성을 위해 적절한 aria-label과 키보드 지원을 제공해야 합니다.`,
+     "Basic 중앙 팝업, 바텀시트(공지/옵션), 탑시트(상단 메뉴), 풀스크린 팝업을 제공합니다.",
+     code: `import { BasicPopup, BottomSheetPopup, TopSheetPopup, FullscreenPopup } from "./Popup";
+     import Button from "./Button";
+     import { useState } from "react";
+     
+     type PopupAction = { label: string; variant?: "primary" | "ghost" | "secondary"; onClick: () => void };
+     
+     const [isBasicOpen, setIsBasicOpen] = useState<boolean>(false);
+     const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
+     const [isTopOpen, setIsTopOpen] = useState<boolean>(false);
+     const [isFullOpen, setIsFullOpen] = useState<boolean>(false);
+     
+     // ✅ BasicPopup
+     <BasicPopup
+       open={isBasicOpen}
+       onClose={() => setIsBasicOpen(false)}
+       icon="🔒"
+       title="알림"
+       description="이 작업을 계속하시겠습니까?"
+       actions={[
+         { label: "취소", variant: "ghost", onClick: () => setIsBasicOpen(false) },
+         { label: "확인", variant: "primary", onClick: () => setIsBasicOpen(false) },
+       ] satisfies PopupAction[]}
+     />;
+     
+     // ✅ BottomSheetPopup (공지/카드형)
+     <BottomSheetPopup
+       open={isSheetOpen}
+       onClose={() => setIsSheetOpen(false)}
+       topIcon={<span aria-hidden>🛠️</span>}
+       title="STORE365 시스템 점검 안내"
+       description={"9월 25일 AM 6:00~AM 9:00 서비스\\n업그레이드가 예정되어 있습니다."}
+       showCloseButton={true}
+     />;
+     
+     // ✅ BottomSheetPopup (자유 UI)
+     <BottomSheetPopup
+       open={isSheetOpen}
+       onClose={() => setIsSheetOpen(false)}
+       title="옵션 선택"
+       showCloseButton={true}
+       content={
+         <div>
+           <h3>여기부터 완전 자유 UI</h3>
+           <p>폼도 넣고, 카드도 넣고, 리스트도 마음대로</p>
+           <Button variant="primary">확인</Button>
+         </div>
+       }
+     />;
+     
+     // ✅ TopSheetPopup (상단 메뉴)
+     <TopSheetPopup
+       open={isTopOpen}
+       onClose={() => setIsTopOpen(false)}
+       closeButton={true}
+       items={[
+         { icon: "🔒", title: "메뉴A", onClick: () => console.log("A") },
+         { icon: "⚙️", title: "메뉴B", onClick: () => console.log("B") },
+       ]}
+     />;
+     
+     // ✅ FullscreenPopup (기본: 상단 X)
+     <FullscreenPopup
+       open={isFullOpen}
+       onClose={() => setIsFullOpen(false)}
+       title="상세 정보"
+       body={<div>풀스크린 팝업 내용</div>}
+       showHeaderClose={true}
+       showBottomClose={false}
+     />;
+     
+     // ✅ 오버레이 클릭으로 닫기
+     // BasicPopup, BottomSheetPopup, TopSheetPopup은 오버레이 클릭 시 닫힙니다.
+     // 팝업 내부 클릭 시 stopPropagation으로 오버레이 클릭 닫힘을 방지합니다.
+     //
+     // ✅ 조건부 렌더링
+     // open=false이면 null을 반환하여 렌더링하지 않습니다.
+     `,
     PreviewComponent: PopupPreview,
   },
   {

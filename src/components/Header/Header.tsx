@@ -10,7 +10,7 @@ import Typography from "../Typography/Typography";
 import Icon from "../Icon/Icon";
 import { TopSheetPopup } from "../Popup/Popup";
 import "./Header.scss";
-import type { HeaderTopSheetOptionMeta } from "../../types/layout";
+import type { HeaderTopSheetOption  } from "../../types/layout";
 
 export type HeaderHandle = {
   toggleMenu: () => void;
@@ -59,7 +59,7 @@ type HeaderProps = {
   showChevron?: boolean;
 
   /** 로고 클릭 시 표시할 상단 팝업 옵션 (메인 헤더에서 사용) */
-  topSheetOptions?: HeaderTopSheetOptionMeta[];
+  topSheetOptions?: HeaderTopSheetOption[];
   /** 바텀 팝업 열림/닫힘 상태 변경 시 호출되는 콜백 (메인 헤더에서 사용) */
   onTopSheetOpenChange?: (isOpen: boolean) => void;
   /** 바텀 팝업에 적용할 커스텀 클래스명 (메인 헤더에서 사용, 기본값: "custom-bottom-sheet") */

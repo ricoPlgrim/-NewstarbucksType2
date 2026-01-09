@@ -44,6 +44,7 @@ export const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "/", element: withSuspense(<PublishingUrlPage />) },
+      { path: "/url", element: withSuspense(<PublishingUrlPage />) },
       { path: "/guide", element: withSuspense(<PublishingGuidePage />) },
       { path: "/login", element: withSuspense(<LoginPage />) },
       { path: "/search-sample", element: withSuspense(<SearchSamplePage />) },

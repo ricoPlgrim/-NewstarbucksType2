@@ -3,7 +3,6 @@
 .green-apron-card-page {
   padding: px(16);
   padding-bottom: px(100); // 하단 네비게이션 공간
-  overflow: hidden;
 
   &__greeting-banner {
     background: #d4e8d9;
@@ -261,6 +260,7 @@
 
   &__badge-content {
     position: relative;
+    --badge-popup-safe: #{px(16)};
   }
 
   &__badge-title {
